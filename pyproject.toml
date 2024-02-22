@@ -1,0 +1,19 @@
+[project]
+name = "neopolyp"
+authors = [{name = "datvodinh", email = "vodinhdat03@gmail.com"}]
+version = "1.0.0"
+requires-python = ">=3.9"
+dependencies = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "opencv-python",
+    "lightning",
+    "torchsummary",
+    "albumentations"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest"
+]
