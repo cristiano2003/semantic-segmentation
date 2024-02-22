@@ -68,13 +68,12 @@ def main():
 
     # DATALOADER
     all_path = []
-    for root, dirs, files in os.walk(os.path.join(args.data_path, "train")):
-        for f in files:
-            all_path.append(os.path.join(root, f))
+    for  file in os.listdir(os.path.join(args.data_path, "image")):
+        all_path.append(os.path.join(args.data_path, "image", file))
+        
     all_gt_path = []
-    for root, dirs, files in os.walk(os.path.join(args.data_path, "train_gt")):
-        for f in files:
-            all_gt_path.append(os.path.join(root, f))
+    for  file in os.listdir(os.path.join(args.data_path, "image")):
+        all_gt_path.append(os.path.join(args.data_path, "masks", file))
 
     shuffle_list = list(zip(all_path, all_gt_path))
     random.shuffle(shuffle_list)
