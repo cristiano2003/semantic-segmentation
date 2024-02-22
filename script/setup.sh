@@ -9,3 +9,4 @@ else
   curl -L "https://drive.google.com/uc?id=1NIQU5s2maodQeJW8UEzizB24pE2p-Ww5&export=download" > "TrainDataset"
   unzip -q "TrainDataset" -d "TrainDataset"
 fi
+
