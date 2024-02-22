@@ -30,7 +30,7 @@ class Transform:
             ])
 
     def __call__(self, img, mask=None):
-        if isinstance(mask, torch.Tensor):
-            return self.transform(image=img, mask=mask)
-        else:
-            return self.transform(image=img)
+        # if isinstance(mask, torch.Tensor):
+        return self.transform(image=img, mask=mask)
+        # else:
+        #     return self.transform(image=img)
