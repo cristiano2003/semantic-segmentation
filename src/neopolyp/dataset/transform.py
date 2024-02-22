@@ -21,7 +21,7 @@ class Transform:
                 A.Resize(256, 256, interpolation=cv2.INTER_LINEAR),
                 A.Normalize(),
                 ToTensorV2(),
-            ])
+            ]) 
         else:
             self.transform = A.Compose([
                 A.Resize(256, 256, interpolation=cv2.INTER_LINEAR),
