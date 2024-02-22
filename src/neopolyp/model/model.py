@@ -10,7 +10,7 @@ class NeoPolypModel(pl.LightningModule):
     def __init__(self, lr: float = 1e-4, name: str = "resunet"):
         super().__init__()
         if name == "resunet":
-            self.model = Resnet50Unet(n_classes=3)
+            self.model = Resnet50Unet(n_classes=2)
         else:
             self.model = UNet(in_channels=3, attention=False, recurrent=False)
         self.lr = lr

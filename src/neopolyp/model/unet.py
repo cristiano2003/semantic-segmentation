@@ -148,7 +148,7 @@ class UNet(nn.Module):
         self.up2 = UpSample(512, 256, attention=attention, recurrent=recurrent)
         self.up3 = UpSample(256, 128, attention=attention, recurrent=recurrent)
         self.up4 = UpSample(128, 64, attention=attention, recurrent=recurrent)
-        self.conv_out = nn.Conv2d(64, 3, kernel_size=1)
+        self.conv_out = nn.Conv2d(64, 2, kernel_size=1)
 
     def forward(self, x):
         x1 = self.conv_in(x)
