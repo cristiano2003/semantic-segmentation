@@ -67,13 +67,18 @@ def main():
         logger = None
 
     # DATALOADER
-    all_path = []
-    for  file in os.listdir(os.path.join(args.data_path, "image")):
-        all_path.append(os.path.join(args.data_path, "image", file))
-        
     all_gt_path = []
-    for  file in os.listdir(os.path.join(args.data_path, "image")):
-        all_gt_path.append(os.path.join(args.data_path, "masks", file))
+    mask_path = os.path.join(args.data_path, "gtFine_trainvaltest")
+    for  dir, sub_dirs, files in os.walk(os.path.join(mask_path, "gtFine")):
+        for file in files:
+            if(file.endswith("_color.png")):
+                all_gt_path.append(os.path.join(dir, file))
+            
+    all_path = []
+    image_path = os.path.join(args.data_path, "leftImg8bit")
+    for  dir, sub_dirs, files in os.walk(image_path):
+        for file in files:
+            all_path.append(os.path.join(dir, file))
 
     shuffle_list = list(zip(all_path, all_gt_path))
     random.shuffle(shuffle_list)
