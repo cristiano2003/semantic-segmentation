@@ -24,12 +24,12 @@ class NeoPolypModel(pl.LightningModule):
         image, mask = batch['image'].float(), batch['mask'].long()
         logits = self(image)
         loss = self.entropy_loss(logits, mask)
-        d_score = dice_score(logits, mask)
+        # d_score = dice_score(logits, mask)
         acc = (logits.argmax(dim=1) == mask).float().mean()
         self.log_dict(
             {
                 f"{name}_loss": loss,
-                f"{name}_dice_score": d_score,
+                # f"{name}_dice_score": d_score,
                 f"{name}_acc": acc
             },
             on_step=False, on_epoch=True, sync_dist=True, prog_bar=True
