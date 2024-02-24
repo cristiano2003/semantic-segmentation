@@ -74,7 +74,7 @@ def main():
     all_gt_path = []
     image_gt_path = os.path.join(args.data_path, 'gt_image_2')
     for file in os.listdir(image_gt_path):
-        all_gt_path.append(os.path.join(image_path, file))
+        all_gt_path.append(os.path.join(image_gt_path, file))
          
 
     train_size = int(args.split_ratio * len(all_path))
