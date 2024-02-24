@@ -77,7 +77,7 @@ def main():
         logger = None
 
     # DATALOADER
-    path = args.path
+    path = args.data_path
     all_path = Read_Data(path=path,is_train=True)
 
     random.shuffle(all_path)
