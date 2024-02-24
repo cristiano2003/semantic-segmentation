@@ -13,6 +13,16 @@ import os
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
+def Read_Data(path,is_train = True):
+  temp = []
+  updated_path = os.path.join(path,"VOC2012_train_val","VOC2012_train_val","ImageSets","Segmentation","train.txt" if is_train else "val.txt")
+  with open(updated_path,"r") as file_:
+    Instances = file_.read().split()
+    for img in Instances:
+      path_img = os.path.join(path,"VOC2012_train_val","VOC2012_train_val","JPEGImages",img+".jpg")
+      path_label = os.path.join(path,"VOC2012_train_val","VOC2012_train_val","SegmentationClass",img+".png")
+      temp.append([path_img,path_label])
+  return temp
 
 def main():
     # PARSERs
@@ -67,22 +77,11 @@ def main():
         logger = None
 
     # DATALOADER
-    all_gt_path = []
-    mask_path = os.path.join(args.data_path, "gtFine_trainvaltest")
-    for  dir, sub_dirs, files in os.walk(os.path.join(mask_path, "gtFine")):
-        for file in files:
-            if(file.endswith("_color.png")):
-                all_gt_path.append(os.path.join(dir, file))
-            
-    all_path = []
-    image_path = os.path.join(args.data_path, "leftImg8bit")
-    for  dir, sub_dirs, files in os.walk(image_path):
-        for file in files:
-            all_path.append(os.path.join(dir, file))
+    path = args.path
+    all_path = Read_Data(path=path,is_train=True)
 
-    shuffle_list = list(zip(all_path, all_gt_path))
-    random.shuffle(shuffle_list)
-    all_path, all_gt_path = zip(*shuffle_list)
+    random.shuffle(all_path)
+    all_path, all_gt_path = zip(*all_path)
 
     train_size = int(args.split_ratio * len(all_path))
     train_path = all_path[:train_size]
