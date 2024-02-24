@@ -13,17 +13,6 @@ import os
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
-def Read_Data(path,is_train = True):
-  temp = []
-  updated_path = os.path.join(path,"VOC2012_train_val","VOC2012_train_val","ImageSets","Segmentation","train.txt" if is_train else "val.txt")
-  with open(updated_path,"r") as file_:
-    Instances = file_.read().split()
-    for img in Instances:
-      path_img = os.path.join(path,"VOC2012_train_val","VOC2012_train_val","JPEGImages",img+".jpg")
-      path_label = os.path.join(path,"VOC2012_train_val","VOC2012_train_val","SegmentationClass",img+".png")
-      temp.append([path_img,path_label])
-  return temp
-
 def main():
     # PARSERs
     parser = argparse.ArgumentParser()
@@ -78,10 +67,16 @@ def main():
 
     # DATALOADER
     path = args.data_path
-    all_path = Read_Data(path=path,is_train=True)
-
-    random.shuffle(all_path)
-    all_path, all_gt_path = zip(*all_path)
+    all_path = []
+    image_path = '../dataset/training/image_2'
+    for file in os.listdir(image_path):
+        all_path.append(os.path.join(image_path, file))
+    
+    all_gt_path = []
+    image_gt_path = '../dataset/training/gt_image_2'
+    for file in os.listdir(image_gt_path):
+        all_gt_path.append(os.path.join(image_path, file))
+         
 
     train_size = int(args.split_ratio * len(all_path))
     train_path = all_path[:train_size]
