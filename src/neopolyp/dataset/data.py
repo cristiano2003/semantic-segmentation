@@ -3,7 +3,7 @@ from .data_utils import *
 from torch.utils.data import random_split
 from .coco_utils import get_coco_dataset
 
-def build_transforms(is_train, size, crop_size,mode="baseline"):
+def build_transforms(is_train, crop_size,mode="baseline"):
     mean = (0.485, 0.456, 0.406)
     std = (0.229, 0.224, 0.225)
     fill = tuple([int(v * 255) for v in mean])
@@ -14,7 +14,7 @@ def build_transforms(is_train, size, crop_size,mode="baseline"):
     if is_train:
         min_scale=0.5
         max_scale=2
-    transforms.append(RandomResize(int(min_scale*size),int(max_scale*size)))
+    # transforms.append(RandomResize(int(min_scale*size),int(max_scale*size)))
     if is_train:
         if mode=="baseline":
             pass
@@ -41,8 +41,8 @@ def build_transforms(is_train, size, crop_size,mode="baseline"):
     ))
     return Compose(transforms)
 
-def get_coco(root,batch_size=16,val_size=513,train_size=256,mode="baseline",num_workers=4):
-    dataset=get_coco_dataset(root, "val", build_transforms(True, val_size, train_size,mode))
+def get_coco(root,batch_size=32, image_size=256,mode="custom1",num_workers=4):
+    dataset=get_coco_dataset(root, "val", build_transforms(True, image_size,mode))
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
     
     train_loader = get_dataloader_train(train_dataset, batch_size,num_workers)
