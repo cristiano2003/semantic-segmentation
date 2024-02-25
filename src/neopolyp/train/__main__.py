@@ -6,6 +6,7 @@ from torchvision.transforms import Resize
 from ..model.model import NeoPolypModel
 from ..dataset.coco_utils import *
 from ..dataset.data_utils import *
+from ..dataset.data import *
 import torch
 import wandb
 import pytorch_lightning as pl
@@ -69,10 +70,7 @@ def main():
 
     # DATALOADER
     data_path = args.data_path
-    dataset = get_coco_dataset(data_path, image_set='val', transforms=Resize((256, 256)))
-    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    train_loader = get_dataloader_train(train_dataset, 16)
-    val_loader = get_dataloader_val(val_dataset)
+    train_loader, val_loader = get_coco(data_path)
 
     # MODEL
     model = NeoPolypModel(lr=args.lr, name=args.model)
