@@ -10,7 +10,8 @@ dependencies = [
     "opencv-python",
     "lightning",
     "torchsummary",
-    "albumentations"
+    "albumentations",
+    "pycocotools"
 ]
 
 [project.optional-dependencies]
