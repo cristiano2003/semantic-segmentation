@@ -10,7 +10,7 @@ class NeoPolypModel(pl.LightningModule):
     def __init__(self, lr: float = 1e-4, name: str = "resunet"):
         super().__init__()
         if name == "resunet":
-            self.model = Resnet50Unet(n_classes=2)
+            self.model = Resnet50Unet(n_classes=21)
         else:
             self.model = UNet(in_channels=3, attention=False, recurrent=False)
         self.lr = lr
@@ -22,6 +22,8 @@ class NeoPolypModel(pl.LightningModule):
 
     def _forward(self, batch, batch_idx, name="train"):
         image, mask = batch[0].float(), batch[1].long()
+        print(image.shape)
+        print(mask.shape)
         logits = self(image)
         loss = self.entropy_loss(logits, mask)
         # d_score = dice_score(logits, mask)
