@@ -22,7 +22,6 @@ class NeoPolypModel(pl.LightningModule):
 
     def _forward(self, batch, batch_idx, name="train"):
         print(batch)
-        print(batch.type)
         print(batch.shape)
         print(batch[0])
         print(batch[1])
