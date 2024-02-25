@@ -25,7 +25,6 @@ def build_transforms(is_train, crop_size,mode="baseline"):
             transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
             transforms.append(AddNoise(10))
             transforms.append(RandomRotation((-10,10), mean=fill, ignore_value=0))
-            transforms.append(RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=ignore_value))
         else:
             raise NotImplementedError()
         transforms.append(
@@ -43,7 +42,7 @@ def build_transforms(is_train, crop_size,mode="baseline"):
     ))
     return Compose(transforms)
 
-def get_coco(root,batch_size=16, image_size=256,mode="custom1",num_workers=4):
+def get_coco(root,batch_size=16, image_size=224,mode="custom1",num_workers=4):
     dataset=get_coco_dataset(root, "val", build_transforms(True, image_size,mode))
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
     
