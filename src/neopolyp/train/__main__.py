@@ -1,9 +1,11 @@
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.loggers import WandbLogger
-from ..dataset.dataset import NeoPolypDataset
-from torch.utils.data import DataLoader
+from ..dataset.custom_dataset import NeoPolypDataset
+from torch.utils.data import DataLoader, random_split
 from ..model.model import NeoPolypModel
+from ..dataset.coco_utils import *
+from ..dataset.data_utils import *
 import torch
 import wandb
 import pytorch_lightning as pl
@@ -66,38 +68,11 @@ def main():
         logger = None
 
     # DATALOADER
-    all_path = []
-    image_path = os.path.join(args.data_path, 'image_2')
-    for file in os.listdir(image_path):
-        all_path.append(os.path.join(image_path, file))
-    
-    all_gt_path = []
-    image_gt_path = os.path.join(args.data_path, 'gt_image_2')
-    for file in os.listdir(image_gt_path):
-        all_gt_path.append(os.path.join(image_gt_path, file))
-         
-
-    train_size = int(args.split_ratio * len(all_path))
-    train_path = all_path[:train_size]
-    train_gt_path = all_gt_path[:train_size]
-    val_path = all_path[train_size:]
-    val_gt_path = all_gt_path[train_size:]
-    train_dataset = NeoPolypDataset(train_path, train_gt_path, session="train")
-    val_dataset = NeoPolypDataset(val_path, val_gt_path, session="val")
-
-    train_loader = DataLoader(
-        dataset=train_dataset,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        shuffle=True
-    )
-
-    val_loader = DataLoader(
-        dataset=val_dataset,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        shuffle=False
-    )
+    data_path = args.data_path
+    dataset = get_coco_dataset(data_path, image_set='val', transforms=None)
+    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
+    train_loader = get_dataloader_train(train_dataset, 16)
+    val_loader = get_dataloader_train(val_dataset)
 
     # MODEL
     model = NeoPolypModel(lr=args.lr, name=args.model)

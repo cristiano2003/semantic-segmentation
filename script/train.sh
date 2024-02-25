@@ -4,6 +4,5 @@ python -m neopolyp.train \
         --max_epochs 25 \
         --num_workers 4 \
         --lr 0.0001 \
-        --split_ratio 0.9 \
-        --data_path data/archive-2/training
+        --split_ratio 0.9 
         # -w -wk 53f5746150b2ce7b0552996cb6acc3beec6e487f
