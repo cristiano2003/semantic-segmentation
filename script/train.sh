@@ -1,5 +1,5 @@
 python -m neopolyp.train \
-        --model pspnet \
+        --model segnet \
         --batch_size 32 \
         --max_epochs 20 \
         --num_workers 4 \
