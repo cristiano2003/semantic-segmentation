@@ -71,7 +71,7 @@ def main():
     dataset = get_coco_dataset(data_path, image_set='val', transforms=None)
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
     train_loader = get_dataloader_train(train_dataset, 16)
-    val_loader = get_dataloader_train(val_dataset)
+    val_loader = get_dataloader_val(val_dataset)
 
     # MODEL
     model = NeoPolypModel(lr=args.lr, name=args.model)
