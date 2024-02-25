@@ -17,6 +17,10 @@ class Compose(object):
 
     def __call__(self, image, label):
         for t in self.transforms:
+            if isinstance(t, T.Resize):
+                image = t(image)
+                label = t(label)
+                continue
             image, label = t(image, label)
         return image, label
 
