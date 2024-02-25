@@ -2,44 +2,28 @@ from .transforms import *
 from .data_utils import *
 from torch.utils.data import random_split
 from .coco_utils import get_coco_dataset
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+import cv2
+import torch
 
 def build_transforms(is_train, crop_size,mode="baseline"):
-    mean = (0.485, 0.456, 0.406)
-    std = (0.229, 0.224, 0.225)
-    fill = tuple([int(v * 255) for v in mean])
-    ignore_value = 255
-    transforms=[]
-    min_scale=1
-    max_scale=1
-    if is_train:
-        min_scale=0.5
-        max_scale=2
-    # transforms.append(RandomResize(int(min_scale*size),int(max_scale*size)))
-    if is_train:
-        if mode=="baseline":
-            pass
-        elif mode=="randaug":
-            transforms.append(RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=ignore_value))
-        elif mode=="custom1":
-            transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
-            transforms.append(AddNoise(10))
-            transforms.append(RandomRotation((-10,10), mean=fill, ignore_value=0))
-        else:
-            raise NotImplementedError()
-        transforms.append(
-        RandomCrop(
-            crop_size,crop_size,
-            fill,
-            ignore_value,
-            random_pad=is_train
-        ))
-        transforms.append(RandomHorizontalFlip(0.5))
-    transforms.append(ToTensor())
-    transforms.append(Normalize(
-        mean,
-        std
-    ))
-    return Compose(transforms)
+    transform = A.Compose([
+                A.HorizontalFlip(p=0.3),
+                A.VerticalFlip(p=0.3),
+                A.RandomGamma(gamma_limit=(70, 130), eps=None, always_apply=False, p=0.2),
+                A.RGBShift(p=0.3, r_shift_limit=10, g_shift_limit=10, b_shift_limit=10),
+                A.OneOf([A.Blur(), A.GaussianBlur(), A.GlassBlur(), A.MotionBlur(),
+                        A.GaussNoise(), A.Sharpen(), A.MedianBlur(), A.MultiplicativeNoise()]),
+                A.CoarseDropout(p=0.2, max_height=35, max_width=35, fill_value=255),
+                A.RandomSnow(snow_point_lower=0.1, snow_point_upper=0.15, brightness_coeff=1.5, p=0.09),
+                A.RandomShadow(p=0.1),
+                A.ShiftScaleRotate(p=0.45, border_mode=cv2.BORDER_CONSTANT, shift_limit=0.15, scale_limit=0.15),
+                A.Resize(256, 256, interpolation=cv2.INTER_LINEAR),
+                A.Normalize(),
+                ToTensorV2(),
+            ])
+    return transform
 
 def get_coco(root,batch_size=16, image_size=256,mode="custom1",num_workers=4):
     dataset=get_coco_dataset(root, "val", build_transforms(True, image_size,mode))

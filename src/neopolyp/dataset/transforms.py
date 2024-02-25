@@ -58,7 +58,7 @@ class Normalize(object):
         self.mean = mean
         self.std = std
 
-    def __call__(self, image, label):
+    def __call__(self, image, label ):
         image = F.normalize(image, mean=self.mean, std=self.std)
         return image, label
 
