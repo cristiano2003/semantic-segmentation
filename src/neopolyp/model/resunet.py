@@ -63,7 +63,7 @@ class UpsampleBlock(nn.Module):
 class Resnet50Unet(nn.Module):
     DEPTH = 6
 
-    def __init__(self, n_classes=2):
+    def __init__(self, n_classes=21):
         super().__init__()
         resnet = resnet50(weights=ResNet50_Weights.DEFAULT)
         down_blocks = []
@@ -115,7 +115,7 @@ class Resnet50Unet(nn.Module):
 
 
 if __name__ == '__main__':
-    model = Resnet50Unet().cuda()
-    inp = torch.rand((2, 3, 512, 512)).cuda()
+    model = Resnet50Unet().cpu()
+    inp = torch.rand((2, 3, 512, 512)).cpu()
     out = model(inp)
     print(out.shape)
