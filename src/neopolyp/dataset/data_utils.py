@@ -36,15 +36,16 @@ def get_dataloader_train(dataset,batch_size,num_workers=4):
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size,
         sampler=train_sampler, num_workers=num_workers,
-        collate_fn=collate_fn, drop_last=True)
+        #collate_fn=collate_fn,
+        drop_last=True)
     return data_loader
 
 def get_dataloader_val(dataset_test,num_workers=4):
     test_sampler = torch.utils.data.SequentialSampler(dataset_test)
     data_loader_test = torch.utils.data.DataLoader(
         dataset_test, batch_size=1,
-        sampler=test_sampler, num_workers=num_workers,
-        collate_fn=collate_fn)
+        sampler=test_sampler, num_workers=num_workers)
+       # collate_fn=collate_fn)
     return data_loader_test
 
 def find_mean_and_std(data_loader):
