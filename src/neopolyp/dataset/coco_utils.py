@@ -18,6 +18,9 @@ class Compose(A.Compose):
         self.transforms = transforms
         
     def forward(self, image, mask):
+        for aug in self.transforms:
+            image, mask = aug(image=image, mask=mask)
+            
         return self.transforms(image=image, mask=mask)
     
     
