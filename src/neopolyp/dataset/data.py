@@ -41,7 +41,7 @@ def build_transforms(is_train, crop_size,mode="baseline"):
     ))
     return Compose(transforms)
 
-def get_coco(root,batch_size=32, image_size=256,mode="custom1",num_workers=4):
+def get_coco(root,batch_size=16, image_size=256,mode="custom1",num_workers=4):
     dataset=get_coco_dataset(root, "val", build_transforms(True, image_size,mode))
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
     
