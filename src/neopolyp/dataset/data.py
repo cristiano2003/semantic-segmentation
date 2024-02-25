@@ -1,4 +1,4 @@
-import transforms as T
+from .transforms import *
 from .data_utils import *
 from torch.utils.data import random_split
 from .coco_utils import get_coco_dataset
@@ -14,32 +14,32 @@ def build_transforms(is_train, size, crop_size,mode="baseline"):
     if is_train:
         min_scale=0.5
         max_scale=2
-    transforms.append(T.RandomResize(int(min_scale*size),int(max_scale*size)))
+    transforms.append(RandomResize(int(min_scale*size),int(max_scale*size)))
     if is_train:
         if mode=="baseline":
             pass
         elif mode=="randaug":
-            transforms.append(T.RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=ignore_value))
+            transforms.append(RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=ignore_value))
         elif mode=="custom1":
-            transforms.append(T.ColorJitter(0.5,0.5,(0.5,2),0.05))
-            transforms.append(T.AddNoise(10))
-            transforms.append(T.RandomRotation((-10,10), mean=fill, ignore_value=0))
+            transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
+            transforms.append(AddNoise(10))
+            transforms.append(RandomRotation((-10,10), mean=fill, ignore_value=0))
         else:
             raise NotImplementedError()
         transforms.append(
-        T.RandomCrop(
+        RandomCrop(
             crop_size,crop_size,
             fill,
             ignore_value,
             random_pad=is_train
         ))
-        transforms.append(T.RandomHorizontalFlip(0.5))
-    transforms.append(T.ToTensor())
-    transforms.append(T.Normalize(
+        transforms.append(RandomHorizontalFlip(0.5))
+    transforms.append(ToTensor())
+    transforms.append(Normalize(
         mean,
         std
     ))
-    return T.Compose(transforms)
+    return Compose(transforms)
 
 def get_coco(root,batch_size=16,val_size=513,train_size=481,mode="baseline",num_workers=4):
     dataset=get_coco_dataset(root, "train", build_transforms(True, val_size, train_size,mode))
