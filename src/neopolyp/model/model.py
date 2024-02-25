@@ -22,7 +22,7 @@ class NeoPolypModel(pl.LightningModule):
 
     def _forward(self, batch, batch_idx, name="train"):
         print(batch)
-        print(len)
+        print(len(batch))
         print(batch[0])
         print(batch[1])
         image, mask = batch['image'].float(), batch['mask'].long()
