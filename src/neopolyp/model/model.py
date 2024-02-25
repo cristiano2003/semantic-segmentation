@@ -21,6 +21,7 @@ class NeoPolypModel(pl.LightningModule):
         return self.model(x)
 
     def _forward(self, batch, batch_idx, name="train"):
+        print(batch)
         image, mask = batch['image'].float(), batch['mask'].long()
         logits = self(image)
         loss = self.entropy_loss(logits, mask)
