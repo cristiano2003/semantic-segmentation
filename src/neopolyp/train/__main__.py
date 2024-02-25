@@ -84,7 +84,7 @@ def main():
         os.makedirs(ckpt_path)
 
     ckpt_callback = ModelCheckpoint(
-        monitor="val_dice_score",
+        monitor="val_loss",
         dirpath=ckpt_path,
         filename="model",
         save_top_k=1,
