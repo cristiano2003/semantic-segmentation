@@ -2,6 +2,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.loggers import WandbLogger
 from torch.utils.data import DataLoader, random_split
+from torchvision.transforms import Resize
 from ..model.model import NeoPolypModel
 from ..dataset.coco_utils import *
 from ..dataset.data_utils import *
@@ -68,7 +69,7 @@ def main():
 
     # DATALOADER
     data_path = args.data_path
-    dataset = get_coco_dataset(data_path, image_set='val', transforms=None)
+    dataset = get_coco_dataset(data_path, image_set='val', transforms=Resize((256, 256)))
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
     train_loader = get_dataloader_train(train_dataset, 16)
     val_loader = get_dataloader_val(val_dataset)
