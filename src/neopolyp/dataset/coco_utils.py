@@ -1,4 +1,6 @@
 import copy
+from typing import Dict
+from albumentations.core.composition import TransformsSeqType
 import torch
 import torch.utils.data
 import torchvision
@@ -8,9 +10,17 @@ import os
 
 from pycocotools import mask as coco_mask
 
-from .transforms import Compose
+# from .transforms import Compose
 
-
+class Compose(A.Compose):
+    def __init__(self, transforms, bbox_params= None, keypoint_params = None, additional_targets: Dict[str, str] | None = None, p: float = 1, is_check_shapes: bool = True):
+        super().__init__(transforms, bbox_params, keypoint_params, additional_targets, p, is_check_shapes)
+        self.transforms = transforms
+        
+    def forward(self, image, mask):
+        return self.transforms(image=image, mask=mask)
+    
+    
 class FilterAndRemapCocoCategories(object):
     def __init__(self, categories, remap=True):
         self.categories = categories
@@ -93,7 +103,7 @@ def get_coco_dataset(root, image_set, transforms):
     CAT_LIST = [0, 5, 2, 16, 9, 44, 6, 3, 17, 62, 21, 67, 18, 19, 4,
                 1, 64, 20, 63, 7, 72]
 
-    transforms = A.Compose([
+    transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
         transforms
