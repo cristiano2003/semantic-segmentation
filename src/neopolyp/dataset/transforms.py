@@ -3,7 +3,7 @@
 Transforms and data augmentation for both image + bbox.
 """
 import random
-
+import numpy as np
 import PIL
 import torch
 import torchvision.transforms as T
@@ -198,7 +198,7 @@ class RandomResize(object):
     def __call__(self, image, target):
         size = random.randint(self.min_size, self.max_size)
         image = F.resize(image, size)
-        target = F.resize(target["masks"], size, interpolation=F.InterpolationMode.NEAREST)
+        target = F.resize(target, size, interpolation=F.InterpolationMode.NEAREST)
         return image, target
 
 
@@ -229,8 +229,10 @@ class RandomSelect(object):
 
 
 class ToTensor(object):
-    def __call__(self, img, target):
-        return F.to_tensor(img), target
+    def __call__(self, image, target):
+        image = F.to_tensor(image)
+        target = torch.as_tensor(np.array(target), dtype=torch.int64)
+        return image, target
 
 
 class RandomErasing(object):
@@ -247,17 +249,8 @@ class Normalize(object):
         self.mean = mean
         self.std = std
 
-    def __call__(self, image, target=None):
+    def __call__(self, image, target):
         image = F.normalize(image, mean=self.mean, std=self.std)
-        if target is None:
-            return image, None
-        target = target.clone()
-        h, w = image.shape[-2:]
-        if "boxes" in target:
-            boxes = target["boxes"]
-            boxes = box_xyxy_to_cxcywh(boxes)
-            boxes = boxes / torch.tensor([w, h, w, h], dtype=torch.float32)
-            target["boxes"] = boxes
         return image, target
 
 
