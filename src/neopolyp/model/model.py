@@ -50,10 +50,7 @@ class NeoPolypModel(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(
             params=self.parameters(),
-            lr=self.lr,
-            weight_decay=self.config.weight_decay,
-            betas=self.config.betas,
-
+            lr=self.lr
         )
         scheduler = {
             'scheduler': torch.optim.lr_scheduler.OneCycleLR(
