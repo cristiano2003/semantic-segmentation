@@ -2,6 +2,15 @@ from .transforms import *
 from .data_utils import *
 from torch.utils.data import random_split
 from .coco_utils import get_coco_dataset
+import albumentations as A 
+
+class HorizontalFlip(A.HorizontalFlip):
+    def __init__(self, p):
+        self.p = p
+    
+    def __call__(self, image, mask):
+        transform = A.HorizontalFlip(p=self.p)
+        return transform(image=image, mask=mask)
 
 
 def build_transforms(is_train, crop_size,mode="baseline"):
@@ -25,6 +34,7 @@ def build_transforms(is_train, crop_size,mode="baseline"):
             transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
             transforms.append(AddNoise(10))
             transforms.append(RandomRotation((-10,10), mean=fill, ignore_value=0))
+            transforms.append(HorizontalFlip(p=0.3))
         else:
             raise NotImplementedError()
         transforms.append(

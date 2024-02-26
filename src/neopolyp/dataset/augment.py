@@ -195,7 +195,7 @@ def apply_op(im, op, prob, magnitude):
     return OP_FUNCTIONS[op](im, v)
 
 def apply_op_both(im,mask, op, prob, magnitude,fill,ignore_value=255):
-    """Apply the selected op to image with given probability and magnitude."""
+    """Apply the selected op to image with  given probability and magnitude."""
     # The magnitude is converted to an absolute value v for an op (some ops use -v or v)
     assert 0 <= magnitude <= 1
     assert op in OP_RANGES and op in OP_FUNCTIONS, "unknown op " + op
