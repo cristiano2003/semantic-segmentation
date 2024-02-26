@@ -6,7 +6,8 @@ from torchvision.transforms import Resize
 from ..model.model import NeoPolypModel
 from ..dataset.coco_utils import *
 from ..dataset.data_utils import *
-
+from torch.utils.data import DataLoader, DistributedSampler
+from ..util.misc import * 
 import torch
 import wandb
 import pytorch_lightning as pl
@@ -72,19 +73,16 @@ def main():
 
     dataset = build("val", args=args)
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    train_loader = DataLoader(
-        dataset=train_dataset,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        shuffle=True
-    )
-
-    val_loader = DataLoader(
-        dataset=val_dataset,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        shuffle=False
-    )
+    sampler_train = DistributedSampler(train_dataset)
+    sampler_val = DistributedSampler(val_dataset, shuffle=False)
+    
+    batch_sampler_train = torch.utils.data.BatchSampler(
+        sampler_train, args.batch_size, drop_last=True)
+    
+    train_loader = DataLoader(train_dataset, batch_sampler=batch_sampler_train,
+                                   collate_fn=collate_fn, num_workers=args.num_workers)
+    val_loader = DataLoader(val_dataset, args.batch_size, sampler=sampler_val,
+                                 drop_last=False, collate_fn=collate_fn, num_workers=args.num_workers)
 
     # MODEL
     model = NeoPolypModel(lr=args.lr, name=args.model)
