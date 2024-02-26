@@ -104,7 +104,7 @@ def get_coco_dataset(root, image_set, transforms):
     ann_file = os.path.join(root, ann_file)
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
-    # if image_set == "train":
-    dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
+    if image_set == "train":
+        dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
 
     return dataset

@@ -4,13 +4,6 @@ from torch.utils.data import random_split
 from .coco_utils import get_coco_dataset
 import albumentations as A 
 
-class HorizontalFlip(A.HorizontalFlip):
-    def __init__(self, p):
-        self.p = p
-    
-    def __call__(self, image, mask):
-        transform = A.HorizontalFlip(p=self.p)
-        return transform(image=image, mask=mask)
 
 def build_transforms(is_train, crop_size,mode="baseline"):
     mean = (0.485, 0.456, 0.406)
@@ -23,7 +16,7 @@ def build_transforms(is_train, crop_size,mode="baseline"):
     if is_train:
         min_scale=0.5
         max_scale=2
-    # transforms.append(RandomResize(int(min_scale*size),int(max_scale*size)))
+
     if is_train:
         if mode=="baseline":
             pass
@@ -42,15 +35,16 @@ def build_transforms(is_train, crop_size,mode="baseline"):
             ignore_value,
             random_pad=is_train
         ))
-        # transforms.append(RandomHorizontalFlip(0.5))
+        
     transforms.append(ToTensor())
     transforms.append(Normalize(
         mean,
         std
     ))
+    
     return Compose(transforms)
 
-def get_coco(root,batch_size=16, image_size=256,mode="custom1",num_workers=4):
+def get_coco(root,batch_size=16, image_size=256,mode="baseline",num_workers=4):
     dataset=get_coco_dataset(root, "val", build_transforms(True, image_size,mode))
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
     
