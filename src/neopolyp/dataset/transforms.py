@@ -5,7 +5,6 @@ from PIL import Image
 import torchvision.transforms as T
 import torch
 from .augment import apply_op_both,rand_augment_both
-import albumentations as A
 
 class Compose(object):
     """
@@ -18,7 +17,7 @@ class Compose(object):
 
     def __call__(self, image, label):
         for t in self.transforms:
-            if isinstance(t, A.Resize):
+            if isinstance(t, F.resize):
                 image = t(image=image)
                 label = t(mask=label)
                 continue
@@ -60,7 +59,7 @@ class Normalize(object):
         self.std = std
 
     def __call__(self, image, label ):
-        image = A.Normalize(image, mean=self.mean, std=self.std)
+        image = F.normalize(image, mean=self.mean, std=self.std)
         return image, label
 
 class RandomResize(object):
@@ -72,15 +71,14 @@ class RandomResize(object):
 
     def __call__(self, image, target):
         size = random.randint(self.min_size, self.max_size)
-        resize = A.Resize(256, 256)
-        image = resize(image=image)
+        image = F.resize(image, 256)
         target = F.resize(target, size, interpolation=F.InterpolationMode.NEAREST)
         
         return image, target
 
 class ColorJitter:
     def __init__(self,brightness=0.2, contrast=0.2, saturation=(0.5,4), hue=0.2):
-        self.jitter=A.ColorJitter(brightness=brightness, contrast=contrast, saturation=saturation, hue=hue)
+        self.jitter=T.ColorJitter(brightness=brightness, contrast=contrast, saturation=saturation, hue=hue)
         
     def __call__(self, image, target):
         image=self.jitter(image=image)
@@ -109,7 +107,7 @@ class RandomRotation:
         expand=True
         if random.random()<0.5:
             angle = random.uniform(*self.degrees)
-            image=A.Rotate(image, angle,fill=self.mean,expand=expand)
+            image=F.rotate(image, angle,fill=self.mean,expand=expand)
             target=F.rotate(target,angle,fill=self.ignore_value,expand=expand)
         return image,target
 
