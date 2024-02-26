@@ -48,6 +48,10 @@ def build_transforms(is_train, crop_size,mode="baseline"):
         mean,
         std
     ))
+    transforms.append(T.RandomHorizontalFlip(p=0.3))
+    transforms.append(T.RandomVerticalFlip(p=0.3))
+    transforms.append(T.RandomRotation(degrees=30))
+    
     return Compose(transforms)
 
 def get_coco(root,batch_size=16, image_size=256,mode="custom1",num_workers=4):
