@@ -44,7 +44,7 @@ def build_transforms(is_train, crop_size,mode="baseline"):
             ignore_value,
             random_pad=is_train
         ))
-        transforms.append(RandomHorizontalFlip(0.5))
+        # transforms.append(RandomHorizontalFlip(0.5))
     transforms.append(ToTensor())
     transforms.append(Normalize(
         mean,
