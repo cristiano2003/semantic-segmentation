@@ -189,14 +189,17 @@ class RandomHorizontalFlip(object):
 
 
 class RandomResize(object):
-    def __init__(self, sizes, max_size=None):
-        assert isinstance(sizes, (list, tuple))
-        self.sizes = sizes
+    def __init__(self, min_size, max_size=None):
+        self.min_size = min_size
+        if max_size is None:
+            max_size = min_size
         self.max_size = max_size
 
-    def __call__(self, img, target=None):
-        size = random.choice(self.sizes)
-        return resize(img, target, size, self.max_size)
+    def __call__(self, image, target):
+        size = random.randint(self.min_size, self.max_size)
+        image = F.resize(image, size)
+        target = F.resize(target, size, interpolation=F.InterpolationMode.NEAREST)
+        return image, target
 
 
 class RandomPad(object):
