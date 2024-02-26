@@ -6,7 +6,7 @@ from torchvision.transforms import Resize
 from ..model.model import NeoPolypModel
 from ..dataset.coco_utils import *
 from ..dataset.data_utils import *
-from ..dataset.data import *
+
 import torch
 import wandb
 import pytorch_lightning as pl
