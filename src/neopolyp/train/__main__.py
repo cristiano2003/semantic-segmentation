@@ -93,10 +93,10 @@ def main():
     lr_callback = LearningRateMonitor("step")
 
     early_stop_callback = EarlyStopping(
-        monitor="val_loss",
+        monitor="val_acc",
         patience=15,
         verbose=True,
-        mode="min"
+        mode="max"
     )
 
     # TRAINER
