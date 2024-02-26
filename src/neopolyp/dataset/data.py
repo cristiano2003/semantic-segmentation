@@ -52,7 +52,7 @@ def build_transforms(is_train, crop_size,mode="baseline"):
 
 def get_coco(root,batch_size=16, image_size=256,mode="custom1",num_workers=4):
     dataset=get_coco_dataset(root, "val", build_transforms(True, image_size,mode))
-    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
+    train_dataset, val_dataset = random_split(dataset, [0.96, 0.04])
     
     train_loader = get_dataloader_train(train_dataset, batch_size,num_workers)
     val_loader = get_dataloader_val(val_dataset,num_workers)
