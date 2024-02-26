@@ -251,7 +251,7 @@ class Normalize(object):
         image = F.normalize(image, mean=self.mean, std=self.std)
         if target is None:
             return image, None
-        target = target.copy()
+        target = target.clone()
         h, w = image.shape[-2:]
         if "boxes" in target:
             boxes = target["boxes"]
