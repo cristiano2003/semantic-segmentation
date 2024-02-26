@@ -1,6 +1,6 @@
 python -m neopolyp.train \
         --model resunet \
-        --batch_size 32 \
+        --batch_size 16 \
         --max_epochs 20 \
         --num_workers 4 \
         --lr 0.0001 \

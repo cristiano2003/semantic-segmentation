@@ -73,8 +73,8 @@ def main():
 
     dataset = build("val", args=args)
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    sampler_train = DistributedSampler(train_dataset)
-    sampler_val = DistributedSampler(val_dataset, shuffle=False)
+    sampler_train = torch.utils.data.RandomSampler(train_dataset)
+    sampler_val = torch.utils.data.SequentialSampler(val_dataset)
     
     batch_sampler_train = torch.utils.data.BatchSampler(
         sampler_train, args.batch_size, drop_last=True)
