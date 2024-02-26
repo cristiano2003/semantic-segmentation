@@ -4,18 +4,13 @@ import pytorch_lightning as pl
 from .unet import UNet
 from .resunet import Resnet50Unet
 from .loss import dice_score, DiceLoss
-from .psp_net import PSPNet
-from .seg_net import SegNet
+
 
 class NeoPolypModel(pl.LightningModule):
     def __init__(self, lr: float = 1e-4, name: str = "resunet"):
         super().__init__()
         if name == "resunet":
             self.model = Resnet50Unet(n_classes=91)
-        if name == "pspnet":
-            self.model = PSPNet(num_classes=21)
-        if name == "segnet":
-            self.model = SegNet(num_classes=21)
         else:
             self.model = UNet(in_channels=3, attention=True, recurrent=False)
         self.lr = lr
