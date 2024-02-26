@@ -125,11 +125,11 @@ def make_coco_transforms(image_set):
         return Compose([
             RandomHorizontalFlip(),
             RandomSelect(
-                RandomResize(scales, max_size=1333),
+                RandomResize(256),
                 Compose([
                     RandomResize([400, 500, 600]),
                     RandomSizeCrop(384, 600),
-                    RandomResize(scales, max_size=1333),
+                    RandomResize(256),
                 ])
             ),
             normalize,
@@ -137,7 +137,7 @@ def make_coco_transforms(image_set):
         
     if image_set == 'val':
         return Compose([
-            RandomResize([800], max_size=1333),
+            RandomResize(256),
             normalize,
         ])
 
