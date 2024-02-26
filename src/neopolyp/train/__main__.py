@@ -23,7 +23,7 @@ def main():
         '--model', '-m', type=str, default='resunet',
         help='model name')
     parser.add_argument(
-        '--data_path', '-d', type=str, default='data',
+        '--coco_path', '-d', type=str, default='data',
         help='model name')
     parser.add_argument(
         '--max_epochs', '-me', type=int, default=200,
@@ -46,6 +46,8 @@ def main():
     parser.add_argument(
         '--seed', '-s', type=int, default=42,
         help='seed')
+    parser.add_argument('--masks', action='store_true',
+                        help="Train segmentation head if the flag is provided")
     parser.add_argument(
         '--wandb', '-w', default=False, action='store_true',
         help='use wandb or not')
@@ -68,9 +70,21 @@ def main():
     else:
         logger = None
 
-    # DATALOADER
-    data_path = args.data_path
-    train_loader, val_loader = get_coco(data_path)
+    dataset = build("val", args=args)
+    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
+    train_loader = DataLoader(
+        dataset=train_dataset,
+        batch_size=args.batch_size,
+        num_workers=args.num_workers,
+        shuffle=True
+    )
+
+    val_loader = DataLoader(
+        dataset=val_dataset,
+        batch_size=args.batch_size,
+        num_workers=args.num_workers,
+        shuffle=False
+    )
 
     # MODEL
     model = NeoPolypModel(lr=args.lr, name=args.model)

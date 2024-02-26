@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torchvision import models
 
-from ..utils import initialize_weights
+from ..util import initialize_weights
 
 
 
