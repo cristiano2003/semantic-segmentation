@@ -17,9 +17,9 @@ class Compose(object):
 
     def __call__(self, image, label):
         for t in self.transforms:
-            if isinstance(t, F.resize):
-                image = t(img=image)
-                label = t(img=label)
+            if isinstance(t, T.Resize):
+                image = t(image)
+                label = t(label)
                 continue
             image, label = t(image, label)
         return image, label
@@ -31,7 +31,7 @@ class Compose(object):
             format_string += "    {0}".format(t)
         format_string += "\n)"
         return format_string
- 
+
 
 class ToTensor(object):
     def __call__(self, image, target):
@@ -71,7 +71,7 @@ class RandomResize(object):
 
     def __call__(self, image, target):
         size = random.randint(self.min_size, self.max_size)
-        image = F.resize(image, 256)
+        image = F.resize(image, size)
         target = F.resize(target, size, interpolation=F.InterpolationMode.NEAREST)
         
         return image, target
@@ -81,8 +81,7 @@ class ColorJitter:
         self.jitter=T.ColorJitter(brightness=brightness, contrast=contrast, saturation=saturation, hue=hue)
         
     def __call__(self, image, target):
-        image=self.jitter(image=image)
-        
+        image=self.jitter(image)
         return image,target
 
 class AddNoise:#additive gaussian noise
