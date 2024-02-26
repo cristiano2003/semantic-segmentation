@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torchvision.models import resnet101, ResNet101_Weights
+from torchvision.models import resnet50, ResNet50_Weights
 
 
 class ConvBlock(nn.Module):
@@ -65,7 +65,7 @@ class Resnet50Unet(nn.Module):
 
     def __init__(self, n_classes=21):
         super().__init__()
-        resnet = resnet101(weights=ResNet101_Weights.DEFAULT)
+        resnet = resnet50(weights=ResNet50_Weights.DEFAULT)
         down_blocks = []
         up_blocks = []
         self.input_block = nn.Sequential(*list(resnet.children()))[:3]
