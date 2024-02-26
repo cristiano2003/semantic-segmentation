@@ -28,8 +28,7 @@ class NeoPolypModel(pl.LightningModule):
         
         image, mask = batch[0].float(), batch[1].long()
         logits = self(image)
-        print(image.shape)
-        print(mask.shape)
+        
         loss = self.entropy_loss(logits, mask)
         # d_score = dice_score(logits, mask)
         acc = (logits.argmax(dim=1) == mask).float().mean()
