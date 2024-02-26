@@ -21,6 +21,8 @@ class NeoPolypModel(pl.LightningModule):
         return self.model(x)
 
     def _forward(self, batch, batch_idx, name="train"):
+        print(batch[0].shape)
+        print(batch[1].shape)
         image = torch.nested.to_padded_tensor(batch[0], padding=0.0)
         mask = torch.nested.to_padded_tensor(batch[1], padding=0.0)
         
