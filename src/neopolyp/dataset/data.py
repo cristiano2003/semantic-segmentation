@@ -12,7 +12,6 @@ class HorizontalFlip(A.HorizontalFlip):
         transform = A.HorizontalFlip(p=self.p)
         return transform(image=image, mask=mask)
 
-
 def build_transforms(is_train, crop_size,mode="baseline"):
     mean = (0.485, 0.456, 0.406)
     std = (0.229, 0.224, 0.225)
@@ -34,7 +33,6 @@ def build_transforms(is_train, crop_size,mode="baseline"):
             transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
             transforms.append(AddNoise(10))
             transforms.append(RandomRotation((-10,10), mean=fill, ignore_value=0))
-            transforms.append(HorizontalFlip(p=0.3))
         else:
             raise NotImplementedError()
         transforms.append(
