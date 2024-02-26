@@ -17,8 +17,11 @@ class Compose(object):
 
     def __call__(self, image, label):
         for t in self.transforms:
-            image = t(image)
-            
+            if isinstance(t, T.Resize):
+                image = t(image)
+                label = t(label)
+                continue
+            image, label = t(image, label)
         return image, label
 
     def __repr__(self):
@@ -70,7 +73,6 @@ class RandomResize(object):
         size = random.randint(self.min_size, self.max_size)
         image = F.resize(image, size)
         target = F.resize(target, size, interpolation=F.InterpolationMode.NEAREST)
-        
         return image, target
 
 class ColorJitter:
