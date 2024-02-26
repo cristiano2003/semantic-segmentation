@@ -88,7 +88,7 @@ def main():
         dirpath=ckpt_path,
         filename="model",
         save_top_k=1,
-        mode="max"
+        mode="min"
     )  # save top 2 epochs with the highest val_dice_score
     lr_callback = LearningRateMonitor("step")
 
