@@ -21,7 +21,7 @@ class NeoPolypModel(pl.LightningModule):
         return self.model(x)
 
     def _forward(self, batch, batch_idx, name="train"):
-        image, mask = batch["image"].float(), batch["mask"].long()
+        image, mask = batch[0].float(), batch[1].long()
         logits = self(image)
         print(image.shape)
         print(mask.shape)
