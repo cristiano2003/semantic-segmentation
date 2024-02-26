@@ -92,7 +92,7 @@ def get_coco_dataset(root, image_set, transforms):
     }
     CAT_LIST = [0, 5, 2, 16, 9, 44, 6, 3, 17, 62, 21, 67, 18, 19, 4,
                 1, 64, 20, 63, 7, 72]
-
+ 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
@@ -104,7 +104,7 @@ def get_coco_dataset(root, image_set, transforms):
     ann_file = os.path.join(root, ann_file)
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
-    if image_set == "train":
-        dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
+    # if image_set == "train":
+    dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
 
     return dataset
