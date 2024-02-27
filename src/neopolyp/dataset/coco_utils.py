@@ -8,7 +8,7 @@ import os
 
 from pycocotools import mask as coco_mask
 
-from transforms import *
+from .transforms import *
 
 
 def build_transforms(is_train, mode="baseline"):
