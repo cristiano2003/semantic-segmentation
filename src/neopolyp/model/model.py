@@ -21,7 +21,7 @@ class NeoPolypModel(pl.LightningModule):
             self.model = UNet(in_channels=3, attention=True, recurrent=False)
         self.lr = lr
         self.dice_loss = DiceLoss()
-        self.entropy_loss = nn.CrossEntropyLoss()
+        self.entropy_loss = nn.CrossEntropyLoss(ignore_index=255)
 
     def forward(self, x):
         return self.model(x)
