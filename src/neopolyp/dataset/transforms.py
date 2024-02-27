@@ -67,8 +67,8 @@ class RandomResize(object):
 
     def __call__(self, image, target):
         size = random.randint(self.min_size, self.max_size)
-        image = F.resize(image, size)
-        target = F.resize(target, size, interpolation=F.InterpolationMode.NEAREST)
+        image = F.resize(image, (size, size))
+        target = F.resize(target, (size, size), interpolation=F.InterpolationMode.NEAREST)
         return image, target
 
 class ColorJitter:

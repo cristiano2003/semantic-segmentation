@@ -98,7 +98,7 @@ def build(args):
     CAT_LIST = [i for i in range(1, 93)]
     
     transforms = Compose([
-    # FilterAndRemapCocoCategories(CAT_LIST, remap=True),
+   
         ConvertCocoPolysToMask(),
         build_transforms(True)
     ])
