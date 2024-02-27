@@ -4,7 +4,7 @@ from torchvision.transforms import functional as F
 from PIL import Image
 import torchvision.transforms as T
 import torch
-from augment import apply_op_both,rand_augment_both
+from .augment import apply_op_both,rand_augment_both
 
 class Compose(object):
     """
