@@ -10,6 +10,19 @@ from pycocotools import mask as coco_mask
 
 from .transforms import *
 
+class FilterAndRemapCocoCategories(object):
+    def __init__(self, categories, remap=True):
+        self.categories = categories
+        self.remap = remap
+
+    def __call__(self, image, anno):
+        anno = [obj for obj in anno if obj["category_id"] in self.categories]
+        if not self.remap:
+            return image, anno
+        anno = copy.deepcopy(anno)
+        for obj in anno:
+            obj["category_id"] = self.categories.index(obj["category_id"])
+        return image, anno
 
 def build_transforms(is_train, mode="baseline"):
     mean = (0.485, 0.456, 0.406)
@@ -19,6 +32,7 @@ def build_transforms(is_train, mode="baseline"):
     transforms=[]
     
     transforms.append(RandomResize(256))
+    
     if is_train:
         if mode=="baseline":
             pass
@@ -33,10 +47,10 @@ def build_transforms(is_train, mode="baseline"):
         
         transforms.append(RandomHorizontalFlip(0.5))
     transforms.append(ToTensor())
-    transforms.append(Normalize(
-        mean,
-        std
-    ))
+    # transforms.append(Normalize(
+    #     mean,
+    #     std
+    # ))
     return Compose(transforms)
 
 
@@ -69,7 +83,7 @@ class ConvertCocoPolysToMask(object):
             # with its corresponding categories
             target, _ = (masks * cats[:, None, None]).max(dim=0)
             # discard overlapping instances
-            target[masks.sum(0) > 1] = 255
+            # target[masks.sum(0) > 1] = 255
         else:
             target = torch.zeros((h, w), dtype=torch.uint8)
         target = Image.fromarray(target.numpy())
@@ -81,11 +95,33 @@ def build(args):
     root = args.coco_path
     PATHS =  ("val2017", os.path.join("annotations", "instances_val2017.json"))
       
+    CAT_LIST = [i for i in range(1, 93)]
+    
+    transforms = Compose([
+    # FilterAndRemapCocoCategories(CAT_LIST, remap=True),
+        ConvertCocoPolysToMask(),
+        build_transforms(True, mode="randaug")
+    ])
+
+    img_folder, ann_file = PATHS
+    img_folder = os.path.join(root, img_folder)
+    ann_file = os.path.join(root, ann_file)
+
+    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
+    train, val = random_split(dataset, [0.9, 0.1])
+
+    return train, val
+
+def infer_build():
+    root = "data"
+    PATHS =  ("val2017", os.path.join("annotations", "instances_val2017.json"))
+      
+    CAT_LIST = [i for i in range(1, 93)]
 
     transforms = Compose([
-
+       # FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
-        build_transforms(True, "custom1")
+        build_transforms(True)
     ])
 
     img_folder, ann_file = PATHS
