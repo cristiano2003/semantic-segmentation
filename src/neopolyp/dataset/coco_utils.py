@@ -137,9 +137,9 @@ def build(args):
     img_folder = os.path.join(root, img_folder)
     ann_file = os.path.join(root, ann_file)
 
-    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=val_transforms)
+    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    # val_dataset.dataset.transforms = transforms
+    val_dataset.dataset.transforms = val_transforms
 
     return train_dataset, val_dataset
 
