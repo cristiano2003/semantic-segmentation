@@ -1,6 +1,6 @@
 [project]
-name = "neopolyp"
-authors = [{name = "datvodinh", email = "vodinhdat03@gmail.com"}]
+name = "coco-segmentation"
+authors = [{name = "cristiano2003", email = "nguyentrungtruc2003@gmail.com"}]
 version = "1.0.0"
 requires-python = ">=3.9"
 dependencies = [
