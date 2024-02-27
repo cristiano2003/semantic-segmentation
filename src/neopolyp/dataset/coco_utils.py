@@ -127,6 +127,11 @@ def build(args):
         ConvertCocoPolysToMask(),
         make_coco_transforms("train")
     ])
+    
+    val_transforms = Compose([
+        ConvertCocoPolysToMask(),
+        make_coco_transforms("val")
+    ])
 
     img_folder, ann_file = PATHS["val"]
     img_folder = os.path.join(root, img_folder)
@@ -134,7 +139,7 @@ def build(args):
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    val_dataset.transforms = make_coco_transforms("val")
+    val_dataset.transforms = val_transforms
 
     return train_dataset, val_dataset
 
