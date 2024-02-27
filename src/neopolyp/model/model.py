@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 from .unet import UNet
 from .resunet import Resnet50Unet
 from .deeplabv3_plus import DeepLab
-from .loss import dice_score, DiceLoss
+from .loss import DiceLoss
 
 
 class NeoPolypModel(pl.LightningModule):
@@ -28,12 +28,12 @@ class NeoPolypModel(pl.LightningModule):
         logits = self(image)
         
         loss = self.entropy_loss(logits, mask)
-        # d_score = dice_score(logits, mask)
+        d_loss = self.dice_loss(logits, mask)
         acc = (logits.argmax(dim=1) == mask).float().mean()
         self.log_dict(
             {
                 f"{name}_loss": loss,
-                # f"{name}_dice_score": d_score,
+                f"{name}_dice_loss": d_loss,
                 f"{name}_acc": acc
             },
             on_step=False, on_epoch=True, sync_dist=True, prog_bar=True
