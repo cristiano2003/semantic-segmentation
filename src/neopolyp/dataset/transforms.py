@@ -83,7 +83,7 @@ class AddNoise:#additive gaussian noise
         image = np.array(image)
         assert(image.dtype==np.uint8)
         gauss = (np.array(torch.randn(*image.shape)) * factor).astype("uint8")
-        noisy = (image + gauss).clip(0, 254)
+        noisy = (image + gauss).clip(0, 91)
         image = Image.fromarray(noisy)
         return image, target
 
