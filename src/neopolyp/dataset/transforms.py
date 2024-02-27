@@ -58,7 +58,7 @@ class Normalize(object):
         image = F.normalize(image, mean=self.mean, std=self.std)
         return image, label
 
-class RandomResize(object):
+class Resize(object):
     def __init__(self, size):
         self.size = size
 

@@ -4,7 +4,7 @@ import torch.utils.data
 import torchvision
 from PIL import Image
 from pathlib import Path
-
+from torch.utils.data import random_split
 import os
 
 from pycocotools import mask as coco_mask
@@ -86,39 +86,70 @@ def _coco_remove_images_without_annotations(dataset, cat_list=None):
 
 
 def make_coco_transforms(image_set):
-
+    mean = (0.485, 0.456, 0.406)
+    std = (0.229, 0.224, 0.225)
+    fill = tuple([int(v * 255) for v in mean])
+    
     normalize = Compose([
         ToTensor(),
         Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-
-     
+    if image_set == 'train':
+        return Compose([
+            Resize(256),
+            ColorJitter(0.5,0.5,(0.5,2),0.05),
+            AddNoise(10),
+            RandomRotation((-10,10), mean=fill, ignore_value=0),
+            RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=255),
+            normalize
+        ])
 
     if image_set == 'val':
         return Compose([
-            RandomResize(256),
+            Resize(256),
             normalize
         ])
 
     raise ValueError(f'unknown {image_set}')
 
 
-def build(image_set, args):
+def build(args):
     root = Path(args.coco_path)
     assert root.exists(), f'provided COCO path {root} does not exist'
     mode = 'instances'
     PATHS = {
-        "train": (root / "train2017", root / "annotations" / f'{mode}_train2017.json'),
-        "val": (root / "val2017", root / "annotations" / f'{mode}_val2017.json'),
+        "val": (root / "val2017", root / "annotations" / f'{mode}_val2017.json')
     }
 
 
     transforms = Compose([
         ConvertCocoPolysToMask(),
-        make_coco_transforms("val")
+        make_coco_transforms("train")
     ])
 
+    img_folder, ann_file = PATHS[0]
+    img_folder = os.path.join(root, img_folder)
+    ann_file = os.path.join(root, ann_file)
+
+    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
+    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
+    val_dataset.transforms = make_coco_transforms("val")
+
+    return train_dataset, val_dataset
+
+def infer_build(image_set, root = "data"):
+    PATHS = {
+        "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
+        "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
+        # "train": ("val2017", os.path.join("annotations", "instances_val2017.json"))
+    }
+    
+
+    transforms = Compose([
+        ConvertCocoPolysToMask(),
+        make_coco_transforms("val")
+    ])
     img_folder, ann_file = PATHS[image_set]
     img_folder = os.path.join(root, img_folder)
     ann_file = os.path.join(root, ann_file)

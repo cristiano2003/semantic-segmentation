@@ -26,7 +26,7 @@ def main():
         help='model name')
     parser.add_argument(
         '--coco_path', '-d', type=str, default='data',
-        help='model name')
+        help='data path')
     parser.add_argument(
         '--max_epochs', '-me', type=int, default=200,
                         help='max epoch')
@@ -72,8 +72,7 @@ def main():
     else:
         logger = None
 
-    dataset = build("val", args=args)
-    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
+    train_dataset, val_dataset = build(args=args)
     sampler_train = torch.utils.data.RandomSampler(train_dataset)
     sampler_val = torch.utils.data.SequentialSampler(val_dataset)
     
