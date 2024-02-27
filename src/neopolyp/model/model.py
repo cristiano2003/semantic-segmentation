@@ -28,9 +28,9 @@ class NeoPolypModel(pl.LightningModule):
     def _forward(self, batch, batch_idx, name="train"):
         image, mask = batch[0].float(), batch[1].long()
         logits = self(image)
-        
+        logits_d = logits.clone()
         loss = self.entropy_loss(logits, mask)
-        d_loss = self.dice_loss(logits, mask)
+        d_loss = self.dice_loss(logits_d, mask)
         acc = (logits.argmax(dim=1) == mask).float().mean()
         self.log_dict(
             {
