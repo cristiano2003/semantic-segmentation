@@ -98,6 +98,7 @@ def make_coco_transforms(image_set):
     if image_set == 'val':
         return Compose([
             RandomResize([256]),
+            RandomCrop(256,256),
             normalize
         ])
 
