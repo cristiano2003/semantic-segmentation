@@ -1,7 +1,7 @@
 python -m neopolyp.train \
         --model segresnet \
         --batch_size 32 \
-        --max_epochs 30 \
+        --max_epochs 25 \
         --num_workers 4 \
         --lr 0.0001 \
         --split_ratio 0.9 \
