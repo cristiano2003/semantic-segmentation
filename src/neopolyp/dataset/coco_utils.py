@@ -45,7 +45,7 @@ def build_transforms(is_train, mode="baseline"):
         else:
             raise NotImplementedError()
         
-        transforms.append(RandomHorizontalFlip(0.5))
+        # transforms.append(RandomHorizontalFlip(0.5))
     transforms.append(ToTensor())
     # transforms.append(Normalize(
     #     mean,
