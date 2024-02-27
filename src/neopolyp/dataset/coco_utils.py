@@ -56,7 +56,7 @@ class ConvertCocoPolysToMask(object):
             # with its corresponding categories
             target, _ = (masks * cats[:, None, None]).max(dim=0)
             # discard overlapping instances
-            # target[masks.sum(0) > 1] = 255
+            target[masks.sum(0) > 1] = 255
         else:
             target = torch.zeros((h, w), dtype=torch.uint8)
         target = Image.fromarray(target.numpy())
@@ -99,8 +99,8 @@ def make_coco_transforms(image_set):
         return Compose([
             Resize(256),
             ColorJitter(0.5,0.5,(0.5,2),0.05),
-            # AddNoise(10),
-            # RandomRotation((-10,10), mean=fill, ignore_value=0),
+            AddNoise(10),
+             RandomRotation((-10,10), mean=fill, ignore_value=0),
             RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=255),
             normalize
         ])
