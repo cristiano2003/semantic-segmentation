@@ -3,28 +3,41 @@ import torch
 import torch.utils.data
 import torchvision
 from PIL import Image
-from pathlib import Path
 from torch.utils.data import random_split
 import os
 
 from pycocotools import mask as coco_mask
 
-from .transforms import *
+from transforms import *
 
 
-class FilterAndRemapCocoCategories(object):
-    def __init__(self, categories, remap=True):
-        self.categories = categories
-        self.remap = remap
-
-    def __call__(self, image, anno):
-        anno = [obj for obj in anno if obj["category_id"] in self.categories]
-        if not self.remap:
-            return image, anno
-        anno = copy.deepcopy(anno)
-        for obj in anno:
-            obj["category_id"] = self.categories.index(obj["category_id"])
-        return image, anno
+def build_transforms(is_train, mode="baseline"):
+    mean = (0.485, 0.456, 0.406)
+    std = (0.229, 0.224, 0.225)
+    fill = tuple([int(v * 255) for v in mean])
+  
+    transforms=[]
+    
+    transforms.append(RandomResize(256))
+    if is_train:
+        if mode=="baseline":
+            pass
+        elif mode=="randaug":
+            transforms.append(RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=255))
+        elif mode=="custom1":
+            transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
+            transforms.append(AddNoise(10))
+            transforms.append(RandomRotation((-10,10), mean=fill, ignore_value=0))
+        else:
+            raise NotImplementedError()
+        
+        transforms.append(RandomHorizontalFlip(0.5))
+    transforms.append(ToTensor())
+    transforms.append(Normalize(
+        mean,
+        std
+    ))
+    return Compose(transforms)
 
 
 def convert_coco_poly_to_mask(segmentations, height, width):
@@ -63,110 +76,23 @@ class ConvertCocoPolysToMask(object):
         return image, target
 
 
-def _coco_remove_images_without_annotations(dataset, cat_list=None):
-    def _has_valid_annotation(anno):
-        # if it's empty, there is no annotation
-        if len(anno) == 0:
-            return False
-        # if more than 1k pixels occupied in the image
-        return sum(obj["area"] for obj in anno) > 1000
-
-    assert isinstance(dataset, torchvision.datasets.CocoDetection)
-    ids = []
-    for ds_idx, img_id in enumerate(dataset.ids):
-        ann_ids = dataset.coco.getAnnIds(imgIds=img_id, iscrowd=None)
-        anno = dataset.coco.loadAnns(ann_ids)
-        if cat_list:
-            anno = [obj for obj in anno if obj["category_id"] in cat_list]
-        if _has_valid_annotation(anno):
-            ids.append(ds_idx)
-
-    dataset = torch.utils.data.Subset(dataset, ids)
-    return dataset
-
-
-def make_coco_transforms(image_set):
-    mean = (0.485, 0.456, 0.406)
-    std = (0.229, 0.224, 0.225)
-    fill = tuple([int(v * 255) for v in mean])
-    
-    normalize = Compose([
-        ToTensor(),
-        Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ])
-
-    if image_set == 'train':
-        return Compose([
-            Resize(256),
-            ColorJitter(0.5,0.5,(0.5,2),0.05),
-            # AddNoise(10),
-            RandomRotation((-10,10), mean=fill, ignore_value=0),
-            normalize
-        ])
-
-    if image_set == 'val':
-        return Compose([
-            Resize(256),
-            normalize
-        ])
-
-    raise ValueError(f'unknown {image_set}')
-
 
 def build(args):
-    root = Path(args.coco_path)
-    assert root.exists(), f'provided COCO path {root} does not exist'
-    mode = 'instances'
-    PATHS = {
-        "val": (root / "val2017", root / "annotations" / f'{mode}_val2017.json')
-    }
-
+    root = args.coco_path
+    PATHS =  ("val2017", os.path.join("annotations", "instances_val2017.json"))
+      
 
     transforms = Compose([
+
         ConvertCocoPolysToMask(),
-        make_coco_transforms("train")
-    ])
-    
-    val_transforms = Compose([
-        ConvertCocoPolysToMask(),
-        make_coco_transforms("val")
+        build_transforms(True, "custom1")
     ])
 
-    img_folder, ann_file = PATHS["val"]
+    img_folder, ann_file = PATHS
     img_folder = os.path.join(root, img_folder)
     ann_file = os.path.join(root, ann_file)
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
-    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    val_dataset.transforms = val_transforms
+    train, val = random_split(dataset, [0.9, 0.1])
 
-    return train_dataset, val_dataset
-
-def infer_build(image_set, root = "data"):
-    PATHS = {
-        "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
-        "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
-        # "train": ("val2017", os.path.join("annotations", "instances_val2017.json"))
-    }
-    
-
-    transforms = Compose([
-        ConvertCocoPolysToMask(),
-        make_coco_transforms("train")
-    ])
-    
-    val_transforms = Compose([
-        ConvertCocoPolysToMask(),
-        make_coco_transforms("val")
-    ])
-    
-    img_folder, ann_file = PATHS[image_set]
-    img_folder = os.path.join(root, img_folder)
-    ann_file = os.path.join(root, ann_file)
-
-    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
-    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    val_dataset.transforms = None
-
-
-    return train_dataset
+    return train, val

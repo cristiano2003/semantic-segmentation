@@ -4,7 +4,7 @@ from torchvision.transforms import functional as F
 from PIL import Image
 import torchvision.transforms as T
 import torch
-from .augment import apply_op_both,rand_augment_both
+from augment import apply_op_both,rand_augment_both
 
 class Compose(object):
     """
@@ -58,14 +58,17 @@ class Normalize(object):
         image = F.normalize(image, mean=self.mean, std=self.std)
         return image, label
 
-class Resize(object):
-    def __init__(self, size):
-        self.size = size
+class RandomResize(object):
+    def __init__(self, min_size, max_size=None):
+        self.min_size = min_size
+        if max_size is None:
+            max_size = min_size
+        self.max_size = max_size
 
     def __call__(self, image, target):
-        
-        image = F.resize(image, (self.size, self.size))
-        target = F.resize(target, (self.size, self.size), interpolation=F.InterpolationMode.NEAREST)
+        size = random.randint(self.min_size, self.max_size)
+        image = F.resize(image, size)
+        target = F.resize(target, size, interpolation=F.InterpolationMode.NEAREST)
         return image, target
 
 class ColorJitter:
@@ -83,7 +86,7 @@ class AddNoise:#additive gaussian noise
         image = np.array(image)
         assert(image.dtype==np.uint8)
         gauss = (np.array(torch.randn(*image.shape)) * factor).astype("uint8")
-        noisy = (image + gauss).clip(0, 90)
+        noisy = (image + gauss).clip(0, 255)
         image = Image.fromarray(noisy)
         return image, target
 
