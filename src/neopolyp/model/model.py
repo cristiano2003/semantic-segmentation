@@ -36,7 +36,7 @@ class NeoPolypModel(pl.LightningModule):
         self.log_dict(
             {
                 f"{name}_loss": loss,
-                #f"{name}_dice_loss": d_loss,
+                f"{name}_dice_loss": d_loss,
                 f"{name}_acc": acc
             },
             on_step=False, on_epoch=True, sync_dist=True, prog_bar=True
