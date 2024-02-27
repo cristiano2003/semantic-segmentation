@@ -59,16 +59,13 @@ class Normalize(object):
         return image, label
 
 class RandomResize(object):
-    def __init__(self, min_size, max_size=None):
-        self.min_size = min_size
-        if max_size is None:
-            max_size = min_size
-        self.max_size = max_size
+    def __init__(self, size):
+        self.size = size
 
     def __call__(self, image, target):
-        size = self.min_size
-        image = F.resize(image, (size, size))
-        target = F.resize(target, (size, size), interpolation=F.InterpolationMode.NEAREST)
+        
+        image = F.resize(image, (self.size, self.size))
+        target = F.resize(target, (self.size, self.size), interpolation=F.InterpolationMode.NEAREST)
         return image, target
 
 class ColorJitter:
