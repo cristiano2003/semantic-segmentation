@@ -7,7 +7,6 @@ from .deeplabv3_plus import DeepLab
 from .segnet import *
 from .loss import DiceLoss
 
-
 class NeoPolypModel(pl.LightningModule):
     def __init__(self, lr: float = 1e-4, name: str = "resunet"):
         super().__init__()

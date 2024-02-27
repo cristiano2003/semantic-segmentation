@@ -126,7 +126,8 @@ def main():
     )
 
     # FIT MODEL
-    trainer.fit(model=model,
+    with torch.autograd.set_detect_anomaly(True):
+        trainer.fit(model=model,
                 train_dataloaders=train_loader,
                 val_dataloaders=val_loader)
 
