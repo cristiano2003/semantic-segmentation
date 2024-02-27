@@ -98,10 +98,9 @@ def make_coco_transforms(image_set):
     if image_set == 'train':
         return Compose([
             Resize(256),
-            # ColorJitter(0.5,0.5,(0.5,2),0.05),
-            # AddNoise(10),
-            #  RandomRotation((-10,10), mean=fill, ignore_value=0),
-            RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=255),
+            ColorJitter(0.5,0.5,(0.5,2),0.05),
+            AddNoise(10),
+            RandomRotation((-10,10), mean=fill, ignore_value=0),
             normalize
         ])
 
@@ -139,7 +138,7 @@ def build(args):
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    val_dataset.dataset.transforms = val_transforms
+    val_dataset.transforms = val_transforms
 
     return train_dataset, val_dataset
 
@@ -167,7 +166,7 @@ def infer_build(image_set, root = "data"):
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
     train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
-    val_dataset.dataset.transforms = val_transforms
+    val_dataset.transforms = None
 
 
-    return train_dataset, val_dataset
+    return train_dataset

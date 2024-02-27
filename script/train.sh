@@ -1,5 +1,5 @@
 python -m neopolyp.train \
-        --model segresnet \
+        --model deeplabv3plus \
         --batch_size 32 \
         --max_epochs 25 \
         --num_workers 4 \
