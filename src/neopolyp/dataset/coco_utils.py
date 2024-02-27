@@ -143,22 +143,31 @@ def build(args):
 
     return train_dataset, val_dataset
 
-# def infer_build(image_set, root = "data"):
-#     PATHS = {
-#         "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
-#         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
-#         # "train": ("val2017", os.path.join("annotations", "instances_val2017.json"))
-#     }
+def infer_build(image_set, root = "data"):
+    PATHS = {
+        "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
+        "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
+        # "train": ("val2017", os.path.join("annotations", "instances_val2017.json"))
+    }
     
 
-#     transforms = Compose([
-#         ConvertCocoPolysToMask(),
-#         make_coco_transforms("val")
-#     ])
-#     img_folder, ann_file = PATHS[image_set]
-#     img_folder = os.path.join(root, img_folder)
-#     ann_file = os.path.join(root, ann_file)
+    transforms = Compose([
+        ConvertCocoPolysToMask(),
+        make_coco_transforms("train")
+    ])
+    
+    val_transforms = Compose([
+        ConvertCocoPolysToMask(),
+        make_coco_transforms("val")
+    ])
+    
+    img_folder, ann_file = PATHS[image_set]
+    img_folder = os.path.join(root, img_folder)
+    ann_file = os.path.join(root, ann_file)
 
-#     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
+    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
+    train_dataset, val_dataset = random_split(dataset, [0.9, 0.1])
+    val_dataset.dataset.transforms = val_transforms
 
-#     return dataset
+
+    return train_dataset, val_dataset
