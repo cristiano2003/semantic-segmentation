@@ -3,6 +3,7 @@ import torch
 import torch.utils.data
 import torchvision
 from PIL import Image
+from pathlib import Path
 
 import os
 
@@ -104,11 +105,12 @@ def make_coco_transforms(image_set):
 
 
 def build(image_set, args):
-    root = args.coco_path
-    PATHS = { 
-        "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
-        "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
-        # "train": ("val2017", os.path.join("annotations", "instances_val2017.json"))
+    root = Path(args.coco_path)
+    assert root.exists(), f'provided COCO path {root} does not exist'
+    mode = 'instances'
+    PATHS = {
+        "train": (root / "train2017", root / "annotations" / f'{mode}_train2017.json'),
+        "val": (root / "val2017", root / "annotations" / f'{mode}_val2017.json'),
     }
 
 

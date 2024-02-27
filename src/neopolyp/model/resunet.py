@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision.models import resnet50, ResNet50_Weights
-
+from torchsummary import summary
 
 class ConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, padding=1, kernel_size=3, stride=1, with_nonlinearity=True):
@@ -114,8 +114,7 @@ class Resnet50Unet(nn.Module):
             return x
 
 
-if __name__ == '__main__':
-    model = Resnet50Unet().cpu()
-    inp = torch.rand((2, 3, 512, 512)).cpu()
-    out = model(inp)
-    print(out.shape)
+if __name__ == "__main__":
+    
+    model = Resnet50Unet(n_classes=91)
+    print(summary(model, input_size=(3, 256, 256), device="cpu"))
