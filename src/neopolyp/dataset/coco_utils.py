@@ -101,7 +101,7 @@ def make_coco_transforms(image_set):
             ColorJitter(0.5,0.5,(0.5,2),0.05),
             # AddNoise(10),
             RandomRotation((-10,10), mean=fill, ignore_value=0),
-            RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=0),
+            # RandAugment(2,1/3,prob=1.0,fill=fill,ignore_value=0),
             normalize
         ])
 
