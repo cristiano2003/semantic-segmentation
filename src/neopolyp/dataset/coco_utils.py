@@ -98,7 +98,7 @@ def make_coco_transforms(image_set):
     if image_set == 'val':
         return Compose([
             RandomResize([256]),
-            normalize,
+            normalize
         ])
 
     raise ValueError(f'unknown {image_set}')
