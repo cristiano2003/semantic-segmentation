@@ -4,6 +4,7 @@ import pytorch_lightning as pl
 from .unet import UNet
 from .resunet import Resnet50Unet
 from .deeplabv3_plus import DeepLab
+from .segnet import *
 from .loss import DiceLoss
 
 
@@ -14,6 +15,8 @@ class NeoPolypModel(pl.LightningModule):
             self.model = Resnet50Unet(n_classes=91)
         if name == "deeplabv3plus":
             self.model = DeepLab(num_classes=91)
+        if name == "segresnet":
+            self.model = SegResNet(num_classes=91)
         else:
             self.model = UNet(in_channels=3, attention=True, recurrent=False)
         self.lr = lr
