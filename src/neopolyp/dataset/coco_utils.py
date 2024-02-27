@@ -47,10 +47,10 @@ def build_transforms(is_train, mode="baseline"):
         
         # transforms.append(RandomHorizontalFlip(0.5))
     transforms.append(ToTensor())
-    # transforms.append(Normalize(
-    #     mean,
-    #     std
-    # ))
+    transforms.append(Normalize(
+        mean,
+        std
+    ))
     return Compose(transforms)
 
 
