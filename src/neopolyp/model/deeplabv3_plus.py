@@ -334,7 +334,7 @@ class Decoder(nn.Module):
 '''
 
 class DeepLab(nn.Module):
-    def __init__(self, num_classes, in_channels=3, backbone='xception', pretrained=False, 
+    def __init__(self, num_classes, in_channels=3, backbone='resnet', pretrained=False, 
                 output_stride=16, freeze_bn=False, **_):
                 
         super(DeepLab, self).__init__()
