@@ -7,4 +7,4 @@ python -m neopolyp.train \
         --split_ratio 0.9 \
         --masks \
         --coco_path /kaggle/input/coco-val/data \
-         -w -wk 53f5746150b2ce7b0552996cb6acc3beec6e487f
+        -w -wk 53f5746150b2ce7b0552996cb6acc3beec6e487f
