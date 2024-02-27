@@ -128,7 +128,7 @@ def build(args):
         make_coco_transforms("train")
     ])
 
-    img_folder, ann_file = PATHS[0]
+    img_folder, ann_file = PATHS["val"]
     img_folder = os.path.join(root, img_folder)
     ann_file = os.path.join(root, ann_file)
 
