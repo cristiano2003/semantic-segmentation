@@ -96,7 +96,7 @@ def make_coco_transforms(image_set):
 
     if image_set == 'val':
         return Compose([
-            RandomResize(256),
+            RandomResize([256]),
             normalize,
         ])
 
@@ -105,7 +105,7 @@ def make_coco_transforms(image_set):
 
 def build(image_set, args):
     root = args.coco_path
-    PATHS = {
+    PATHS = { 
         "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
         # "train": ("val2017", os.path.join("annotations", "instances_val2017.json"))
