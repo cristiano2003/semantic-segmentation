@@ -3,6 +3,7 @@ import torch.nn as nn
 import pytorch_lightning as pl
 from .unet import UNet
 from .resunet import Resnet50Unet
+from .deeplabv3_plus import DeepLab
 from .loss import dice_score, DiceLoss
 
 
@@ -11,6 +12,8 @@ class NeoPolypModel(pl.LightningModule):
         super().__init__()
         if name == "resunet":
             self.model = Resnet50Unet(n_classes=91)
+        if name == "deeplabv3plus":
+            self.model = DeepLab(num_classes=91)
         else:
             self.model = UNet(in_channels=3, attention=True, recurrent=False)
         self.lr = lr
