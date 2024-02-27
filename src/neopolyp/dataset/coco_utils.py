@@ -100,7 +100,7 @@ def build(args):
     transforms = Compose([
     # FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
-        build_transforms(True, mode="randaug")
+        build_transforms(True)
     ])
 
     img_folder, ann_file = PATHS
