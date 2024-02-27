@@ -1,5 +1,5 @@
 python -m neopolyp.train \
-        --model deeplabv3plus \
+        --model resunet \
         --batch_size 32 \
         --max_epochs 25 \
         --num_workers 4 \
