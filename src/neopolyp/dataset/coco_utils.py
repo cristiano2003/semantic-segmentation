@@ -56,7 +56,7 @@ class ConvertCocoPolysToMask(object):
             # with its corresponding categories
             target, _ = (masks * cats[:, None, None]).max(dim=0)
             # discard overlapping instances
-            target[masks.sum(0) > 1] = 255
+            # target[masks.sum(0) > 1] = 255
         else:
             target = torch.zeros((h, w), dtype=torch.uint8)
         target = Image.fromarray(target.numpy())
