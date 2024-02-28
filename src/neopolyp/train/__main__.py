@@ -48,8 +48,6 @@ def main():
     parser.add_argument(
         '--seed', '-s', type=int, default=42,
         help='seed')
-    parser.add_argument('--masks', action='store_true',
-                        help="Train segmentation head if the flag is provided")
     parser.add_argument(
         '--wandb', '-w', default=False, action='store_true',
         help='use wandb or not')
