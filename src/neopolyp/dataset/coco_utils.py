@@ -25,16 +25,16 @@ class FilterAndRemapCocoCategories(object):
         return image, anno
 
 
-def build_transform(train=True):
+def build_transform(mode="Train"):
     transforms = []
     
    
     transforms.append(Resize(256))
 
-    # if train:
-    #     transforms.append(T.RandomHorizontalFlip(0.5))
+    if mode == "train":
+        transforms.append(T.RandomHorizontalFlip(0.5))
 
-    transforms.append(RandomHorizontalFlip(0.5))
+   
 
     transforms.append(ToTensor())
     transforms.append(Normalize(mean=[0.485, 0.456, 0.406],
@@ -99,25 +99,33 @@ def _coco_remove_images_without_annotations(dataset, cat_list=None):
     dataset = torch.utils.data.Subset(dataset, ids)
     return dataset
 
-def build(args):
-    root = args.coco_path
-    PATHS =  ("val2017", os.path.join("annotations", "instances_val2017.json"))
-      
-    
+
+def build(args, mode='train'):
+    root = args.data_path
+    PATHS = {
+        "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
+        "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
+    }
+     
+    CAT_LIST = [0, 5, 2, 16, 9, 44, 6, 3, 17, 62, 21, 67, 18, 19, 4,
+                1, 64, 20, 63, 7, 72]
+
     transforms = Compose([
-       #  FilterAndRemapCocoCategories(CAT_LIST, remap=True),
+        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
-        build_transform(True)
+        build_transform(train=mode)
     ])
 
-    img_folder, ann_file = PATHS
+    img_folder, ann_file = PATHS[mode]
     img_folder = os.path.join(root, img_folder)
     ann_file = os.path.join(root, ann_file)
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
-    train, val = random_split(dataset, [0.9, 0.1])
 
-    return train, val
+    if mode == "train":
+        dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
+
+    return dataset
 
 
 
@@ -126,17 +134,23 @@ def infer_build():
     PATHS =  ("val2017", os.path.join("annotations", "instances_val2017.json"))
       
     
+    
+    CAT_LIST = [0, 5, 2, 16, 9, 44, 6, 3, 17, 62, 21, 67, 18, 19, 4,
+                1, 64, 20, 63, 7, 72]
+
     transforms = Compose([
-       #  FilterAndRemapCocoCategories(CAT_LIST, remap=True),
+        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
         build_transform(True)
     ])
+
 
     img_folder, ann_file = PATHS
     img_folder = os.path.join(root, img_folder)
     ann_file = os.path.join(root, ann_file)
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
+    dataset = _coco_remove_images_without_annotations(dataset, cat_list=CAT_LIST)
     train, val = random_split(dataset, [0.9, 0.1])
-
+   
     return train, val
