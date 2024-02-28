@@ -32,7 +32,7 @@ def build_transform(mode="Train"):
     transforms.append(Resize(256))
 
     if mode == "train":
-        transforms.append(T.RandomHorizontalFlip(0.5))
+        transforms.append(RandomHorizontalFlip(0.5))
 
    
 
