@@ -29,7 +29,7 @@ def build_transform(mode="Train"):
     transforms = []
     
    
-    transforms.append(Resize(256))
+    transforms.append(Resize(224))
 
     if mode == "train":
         transforms.append(RandomHorizontalFlip(0.5))
@@ -135,7 +135,7 @@ def infer_build( mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 3, 4, 6]
+    CAT_LIST = [0, 3, 4]
 
     transforms = Compose([
        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
