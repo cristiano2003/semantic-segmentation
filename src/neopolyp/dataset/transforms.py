@@ -50,6 +50,12 @@ class RandomResize(object):
         target = F.resize(target, size, interpolation=Image.NEAREST)
         return image, target
 
+class ColorJitter:
+    def __init__(self,brightness=0.2, contrast=0.2, saturation=(0.5,4), hue=0.2):
+        self.jitter=T.ColorJitter(brightness=brightness, contrast=contrast, saturation=saturation, hue=hue)
+    def __call__(self, image, target):
+        image=self.jitter(image)
+        return image,target
 
 class RandomHorizontalFlip(object):
     def __init__(self, flip_prob):

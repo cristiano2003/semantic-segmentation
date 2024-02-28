@@ -33,7 +33,7 @@ def build_transform(mode="Train"):
 
     if mode == "train":
         transforms.append(RandomHorizontalFlip(0.5))
-
+        transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
    
 
     transforms.append(ToTensor())
