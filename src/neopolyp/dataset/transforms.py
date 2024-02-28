@@ -32,8 +32,9 @@ class Resize(object):
         self.size = size
 
     def __call__(self, image, target):
-        image = F.resize(image, self.size)
-        target = F.resize(target, self.size, interpolation=Image.NEAREST)
+        size = self.size
+        image = F.resize(image, (size, size))
+        target = F.resize(target,(size, size), interpolation=Image.NEAREST)
         return image, target
 
 class RandomResize(object):

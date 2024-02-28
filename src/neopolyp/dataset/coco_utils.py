@@ -24,14 +24,15 @@ class FilterAndRemapCocoCategories(object):
             obj["category_id"] = self.categories.index(obj["category_id"])
         return image, anno
 
+
 def build_transform(train=True):
     transforms = []
     
    
     transforms.append(Resize(256))
 
-    if train:
-        transforms.append(T.RandomHorizontalFlip(0.5))
+    # if train:
+    #     transforms.append(T.RandomHorizontalFlip(0.5))
 
     transforms.append(RandomHorizontalFlip(0.5))
 
@@ -120,27 +121,22 @@ def build(args):
 
 
 
-# def infer_build():
-#     root = "data"
-#     PATHS =  ("val2017", os.path.join("annotations", "instances_val2017.json"))
+def infer_build():
+    root = "data"
+    PATHS =  ("val2017", os.path.join("annotations", "instances_val2017.json"))
       
-#     CAT_LIST = [0, 5, 2, 16, 9, 44, 6, 3, 17, 62, 21, 67, 18, 19, 4,
-#                 1, 64, 20, 63, 7, 72]
-
-#     transforms = Compose([
-#        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
-#         ConvertCocoPolysToMask(),
-#         build_transforms(True)
-#     ])
-
-#     img_folder, ann_file = PATHS
-#     img_folder = os.path.join(root, img_folder)
-#     ann_file = os.path.join(root, ann_file)
-
-#     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
-#     train, val = random_split(dataset, [0.9, 0.1])
     
-  
-    # dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
+    transforms = Compose([
+       #  FilterAndRemapCocoCategories(CAT_LIST, remap=True),
+        ConvertCocoPolysToMask(),
+        build_transform(True)
+    ])
 
-    # return train, val
+    img_folder, ann_file = PATHS
+    img_folder = os.path.join(root, img_folder)
+    ann_file = os.path.join(root, ann_file)
+
+    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
+    train, val = random_split(dataset, [0.9, 0.1])
+
+    return train, val
