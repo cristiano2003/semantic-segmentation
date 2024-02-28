@@ -107,7 +107,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 16, 17, 18]
+    CAT_LIST = [0, 3, 4]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
@@ -138,7 +138,7 @@ def infer_build( mode='train'):
     CAT_LIST = [0, 3]
 
     transforms = Compose([
-       # FilterAndRemapCocoCategories(CAT_LIST, remap=True),
+       FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
         build_transform(mode="train")
     ])
