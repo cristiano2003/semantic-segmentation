@@ -113,7 +113,7 @@ def build(args, mode='train'):
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
-        build_transform(train=mode)
+        build_transform(mode="train")
     ])
 
     img_folder, ann_file = PATHS[mode]
