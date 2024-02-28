@@ -135,7 +135,7 @@ def infer_build( mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 7, 8]
+    CAT_LIST = [0, 3, 4, 6]
 
     transforms = Compose([
        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
