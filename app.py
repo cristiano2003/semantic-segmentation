@@ -68,12 +68,11 @@ def demo():
     demo.launch()
     
 if __name__ == "__main__":
-    root = "data/val2017"
+    root = "/kaggle/input/coco-2017-dataset/coco2017/val2017"
     all_path = []
     for file in os.listdir(root):
         all_path.append(os.path.join(root, file))
         
     dataset = infer_build(mode="val")
-    map_location = {'cuda:0':'cpu'}
     model = NeoPolypModel.load_from_checkpoint("./checkpoints/model/model.ckpt")
     demo()
