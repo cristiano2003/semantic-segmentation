@@ -65,3 +65,8 @@ class NeoPolypModel(pl.LightningModule):
             'frequency': 1
         }
         return [optimizer], [scheduler]
+    
+if __name__ == "__main__":
+    
+    model = NeoPolypModel()
+    print(summary(model, input_size=(3, 256, 256), device="cpu"))
