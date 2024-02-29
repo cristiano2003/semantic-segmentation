@@ -129,7 +129,7 @@ def build(args, mode='train'):
 
 
 def infer_build( mode='train'):
-    root = "data"
+    root = "/kaggle/input/coco-2017-dataset/coco2017/val2017"
     PATHS = {
         "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
