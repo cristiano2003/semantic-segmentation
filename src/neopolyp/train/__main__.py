@@ -97,7 +97,7 @@ def main():
     ckpt_callback = ModelCheckpoint(
         monitor="val_loss",
         dirpath=ckpt_path,
-        filename="model",
+        filename=args.model,
         save_top_k=1,
         mode="min"
     )  # save top 2 epochs with the highest val_dice_score
