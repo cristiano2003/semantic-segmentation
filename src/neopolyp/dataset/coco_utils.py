@@ -29,7 +29,7 @@ def build_transform(mode="Train"):
     transforms = []
     
    
-    transforms.append(Resize(256))
+    transforms.append(Resize(224))
 
     if mode == "train":
         transforms.append(RandomHorizontalFlip(0.5))
@@ -129,13 +129,13 @@ def build(args, mode='train'):
 
 
 def infer_build( mode='train'):
-    root = "/kaggle/input/coco-2017-dataset/coco2017"
+    root = "data"
     PATHS = {
         "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 2, 3, 4, 6, 7, 8]
+    CAT_LIST = [0, 1, 3, 4]
 
     transforms = Compose([
        FilterAndRemapCocoCategories(CAT_LIST, remap=True),

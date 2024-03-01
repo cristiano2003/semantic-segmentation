@@ -8,14 +8,14 @@ from .segnet import *
 from .loss import DiceLoss
 
 class NeoPolypModel(pl.LightningModule):
-    def __init__(self, lr: float = 1e-4, name: str = "resunet"):
+    def __init__(self, lr: float = 1e-4, name: str = "segresnet"):
         super().__init__()
         if name == "resunet":
-            self.model = Resnet50Unet(n_classes=7)
+            self.model = Resnet50Unet(n_classes=4)
         if name == "deeplabv3plus":
-            self.model = DeepLab(num_classes=7)
+            self.model = DeepLab(num_classes=4)
         if name == "segresnet":
-            self.model = SegResNet(num_classes=7)
+            self.model = SegResNet(num_classes=4)
         else:
             self.model = UNet(in_channels=3, attention=True, recurrent=False)
         self.lr = lr
