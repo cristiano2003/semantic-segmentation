@@ -11,7 +11,7 @@ class NeoPolypModel(pl.LightningModule):
     def __init__(self, lr: float = 1e-4, name: str = "segresnet"):
         super().__init__()
         if name == "resunet":
-            self.model = Resnet50Unet(n_classes=4)
+            self.model = Resnet50Unet(n_classes=2)
         if name == "deeplabv3plus":
             self.model = DeepLab(num_classes=2)
         if name == "segresnet":
