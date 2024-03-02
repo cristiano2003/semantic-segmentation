@@ -23,8 +23,8 @@ class Compose(object):
 
     def __call__(self, image, target):
         for t in self.transforms:
-            image, target = t(image, target)
-        return image, target
+            transform = t(image=image, mask=target)
+        return transform['image'], transform['mask']
 
 
 class Resize(object):

@@ -5,9 +5,10 @@ import torchvision
 from PIL import Image
 from torch.utils.data import random_split
 import os
-
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 from pycocotools import mask as coco_mask
-
+import cv2
 from .transforms import *
 
 class FilterAndRemapCocoCategories(object):
@@ -29,16 +30,17 @@ def build_transform(mode="Train"):
     transforms = []
     
    
-    transforms.append(Resize(224))
+    transforms.append(A.Resize(256, 256, interpolation=cv2.INTER_LINEAR))
 
     if mode == "train":
-        transforms.append(RandomHorizontalFlip(0.5))
-        transforms.append(ColorJitter(0.5,0.5,(0.5,2),0.05))
+        transforms.append(A.HorizontalFlip(0.5))
+        transforms.append(A.ColorJitter(0.5,0.5,(0.5,2),0.05))
     
 
-    transforms.append(ToTensor())
-    transforms.append(Normalize(mean=[0.485, 0.456, 0.406],
-                                  std=[0.229, 0.224, 0.225]))
+    transforms.append(ToTensorV2())
+    # transforms.append(A.Normalize(mean=[0.485, 0.456, 0.406],
+    #                               std=[0.229, 0.224, 0.225]))
+    transforms.append(A.Normalize())
 
     return Compose(transforms)
 
@@ -107,7 +109,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 2, 3, 4, 6, 7, 8]
+    CAT_LIST = [0, 3]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
@@ -135,7 +137,7 @@ def infer_build( mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 1]
+    CAT_LIST = [0, 3]
 
     transforms = Compose([
        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
