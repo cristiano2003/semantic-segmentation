@@ -5,7 +5,7 @@ import torch
 from torchvision import transforms as T
 from torchvision.transforms import functional as F
 import copy
-
+from .coco_utils import FilterAndRemapCocoCategories
 def pad_if_smaller(img, size, fill=0):
     min_size = min(img.size)
     if min_size < size:
@@ -15,19 +15,6 @@ def pad_if_smaller(img, size, fill=0):
         img = F.pad(img, (0, 0, padw, padh), fill=fill)
     return img
 
-class FilterAndRemapCocoCategories(object):
-    def __init__(self, categories, remap=True):
-        self.categories = categories
-        self.remap = remap
-
-    def __call__(self, image, anno):
-        anno = [obj for obj in anno if obj["category_id"] in self.categories]
-        if not self.remap:
-            return image, anno
-        anno = copy.deepcopy(anno)
-        for obj in anno:
-            obj["category_id"] = self.categories.index(obj["category_id"])
-        return image, anno
     
 class Compose(object):
     def __init__(self, transforms):
@@ -39,6 +26,7 @@ class Compose(object):
                 image, target = t(image, target)
                 continue
             transform = t(image=image, mask=target)
+            
         return transform['image'], transform['mask']
 
 

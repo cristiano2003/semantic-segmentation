@@ -9,8 +9,23 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from pycocotools import mask as coco_mask
 import cv2
-from .transforms import *
+# from .transforms import *
 
+    
+class Compose(object):
+    def __init__(self, transforms):
+        self.transforms = transforms
+
+    def __call__(self, image, target):
+        for t in self.transforms:
+            if isinstance(t, FilterAndRemapCocoCategories):
+                image, target = t(image, target)
+                continue
+            transform = t(image=image, mask=target)
+            
+        return transform['image'], transform['mask']
+    
+    
 class FilterAndRemapCocoCategories(object):
     def __init__(self, categories, remap=True):
         self.categories = categories
