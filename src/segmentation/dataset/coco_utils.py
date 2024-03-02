@@ -25,7 +25,7 @@ class FilterAndRemapCocoCategories(object):
         return image, anno
 
 
-def build_transform(mode="Train"):
+def build_transform(mode="train"):
     transforms = []
     
    
@@ -107,7 +107,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 2, 3, 4, 6, 8]
+    CAT_LIST = [0, 2, 3, 4]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),

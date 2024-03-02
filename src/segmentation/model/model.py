@@ -8,7 +8,7 @@ from .segnet import *
 from .loss import DiceLoss
 
 class NeoPolypModel(pl.LightningModule):
-    def __init__(self, lr: float = 1e-4, name: str = "segresnet", num_classes = 6):
+    def __init__(self, lr: float = 1e-4, name: str = "segresnet", num_classes = 4):
         super().__init__()
         if name == "resunet":
             self.model = Resnet50Unet(n_classes=num_classes)
