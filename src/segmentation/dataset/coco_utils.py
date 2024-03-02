@@ -3,7 +3,6 @@ import torch
 import torch.utils.data
 import torchvision
 from PIL import Image
-from torch.utils.data import random_split
 import os
 import albumentations as A
 from pycocotools import mask as coco_mask
@@ -30,7 +29,7 @@ def build_transform(mode="Train"):
     transforms = []
     
    
-    transforms.append(Resize(256, 256, interpolation=cv2.INTER_LINEAR))
+    transforms.append(Resize(256))
 
     if mode == "train":
         transforms.append(RandomHorizontalFlip(0.5))
@@ -109,7 +108,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 2, 3, 4, 6, 7, 8]
+    CAT_LIST = [0, 1, 3, 4]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
