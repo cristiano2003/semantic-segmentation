@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 import random
-
+from .coco_utils import FilterAndRemapCocoCategories
 import torch
 from torchvision import transforms as T
 from torchvision.transforms import functional as F
@@ -23,6 +23,9 @@ class Compose(object):
 
     def __call__(self, image, target):
         for t in self.transforms:
+            if isinstance(t, FilterAndRemapCocoCategories):
+                image, target = t(image, target)
+                continue
             transform = t(image=image, mask=target)
         return transform['image'], transform['mask']
 
