@@ -18,7 +18,8 @@ class Compose(object):
 
     def __call__(self, image, target):
         for t in self.transforms:
-            if isinstance(t, FilterAndRemapCocoCategories):
+            if isinstance(t, FilterAndRemapCocoCategories) \
+                    or isinstance(t, ConvertCocoPolysToMask):
                 image, target = t(image, target)
                 continue
             transform = t(image=image, mask=target)
