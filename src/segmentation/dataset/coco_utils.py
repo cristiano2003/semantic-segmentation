@@ -107,7 +107,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 1, 2, 3, 4]
+    CAT_LIST = [0, 2, 3, 4, 6, 8]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
@@ -121,8 +121,8 @@ def build(args, mode='train'):
 
     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
 
-    # if mode == "train":
-    dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
+    if mode == "train":
+        dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
 
     return dataset
 

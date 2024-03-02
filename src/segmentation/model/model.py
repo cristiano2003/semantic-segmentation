@@ -8,16 +8,16 @@ from .segnet import *
 from .loss import DiceLoss
 
 class NeoPolypModel(pl.LightningModule):
-    def __init__(self, lr: float = 1e-4, name: str = "segresnet"):
+    def __init__(self, lr: float = 1e-4, name: str = "segresnet", num_classes = 6):
         super().__init__()
         if name == "resunet":
-            self.model = Resnet50Unet(n_classes=5)
+            self.model = Resnet50Unet(n_classes=num_classes)
         if name == "deeplabv3plus":
-            self.model = DeepLab(num_classes=5)
+            self.model = DeepLab(num_classes=num_classes)
         if name == "segnet":
-            self.model = SegResNet(num_classes=5)
+            self.model = SegResNet(num_classes=num_classes)
         else:
-            self.model = UNet(in_channels=3, attention=True, recurrent=False)
+            self.model = UNet(in_channels=3, num_classes= num_classes, attention=True, recurrent=False)
         self.lr = lr
         self.dice_loss = DiceLoss()
         self.entropy_loss = nn.CrossEntropyLoss(ignore_index=255)
