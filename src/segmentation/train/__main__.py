@@ -59,7 +59,7 @@ def train(args, model = 'resunet'):
     # WANDB (OPTIONAL)
     if args.wandb:
         wandb.login(key=args.wandb_key)  # API KEY
-        name = f"{args.model}-{args.max_epochs}-{args.batch_size}-{args.lr}"
+        name = f"{model}-{args.max_epochs}-{args.batch_size}-{args.lr}"
         logger = WandbLogger(project="semantic-segmentation",
                              name=name,
                              log_model="all")
