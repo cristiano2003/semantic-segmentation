@@ -5,7 +5,7 @@ import torch
 from torchvision import transforms as T
 from torchvision.transforms import functional as F
 import copy
-from .coco_utils import FilterAndRemapCocoCategories
+
 def pad_if_smaller(img, size, fill=0):
     min_size = min(img.size)
     if min_size < size:
@@ -17,6 +17,7 @@ def pad_if_smaller(img, size, fill=0):
 
     
 class Compose(object):
+    
     def __init__(self, transforms):
         self.transforms = transforms
 
