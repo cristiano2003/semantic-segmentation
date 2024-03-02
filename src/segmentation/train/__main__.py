@@ -16,47 +16,43 @@ import argparse
 import random
 import os
 
-torch.multiprocessing.set_sharing_strategy('file_system')
 
-def main():
-    # PARSERs
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--model', '-m', type=str, default='resunet',
-        help='model name')
-    parser.add_argument(
-        '--data_path', '-d', type=str, default='data',
-        help='data path')
-    parser.add_argument(
-        '--max_epochs', '-me', type=int, default=200,
-                        help='max epoch')
-    parser.add_argument(
-        '--batch_size', '-bs', type=int, default=25,
-                        help='batch size')
-    parser.add_argument(
-        '--lr', '-l', type=float, default=1e-4,
-        help='learning rate')
-    parser.add_argument(
-        '--num_workers', '-nw', type=int, default=2,
-        help='number of workers')
-    parser.add_argument(
-        '--split_ratio', '-sr', type=float, default=0.9,
-        help='split ratio')
-    parser.add_argument(
-        '--accumulate_grad_batches', '-agb', type=int, default=1,
-        help='accumulate_grad_batches')
-    parser.add_argument(
-        '--seed', '-s', type=int, default=42,
-        help='seed')
-    parser.add_argument(
-        '--wandb', '-w', default=False, action='store_true',
-        help='use wandb or not')
-    parser.add_argument(
-        '--wandb_key', '-wk', type=str,
-        help='wandb API key')
+# PARSERS
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--model', '-m', type=str, default='resunet',
+    help='model name')
+parser.add_argument(
+    '--data_path', '-d', type=str, default='data',
+    help='data path')
+parser.add_argument(
+    '--max_epochs', '-me', type=int, default=200,
+                    help='max epoch')
+parser.add_argument(
+    '--batch_size', '-bs', type=int, default=25,
+                    help='batch size')
+parser.add_argument(
+    '--lr', '-l', type=float, default=1e-4,
+    help='learning rate')
+parser.add_argument(
+    '--num_workers', '-nw', type=int, default=2,
+    help='number of workers')
+parser.add_argument(
+    '--accumulate_grad_batches', '-agb', type=int, default=1,
+    help='accumulate_grad_batches')
+parser.add_argument(
+    '--seed', '-s', type=int, default=42,
+    help='seed')
+parser.add_argument(
+    '--wandb', '-w', default=False, action='store_true',
+    help='use wandb or not')
+parser.add_argument(
+    '--wandb_key', '-wk', type=str,
+    help='wandb API key')
 
-    args = parser.parse_args()
-
+args = parser.parse_args()
+    
+def train(args, model = 'resunet'):
     # SEED
     pl.seed_everything(args.seed, workers=True)
 
@@ -84,7 +80,7 @@ def main():
                                  drop_last=False, collate_fn=collate_fn, num_workers=args.num_workers)
 
     # MODEL
-    model = NeoPolypModel(lr=args.lr, name=args.model)
+    model = NeoPolypModel(lr=args.lr, name=model)
 
     # CALLBACK
     root_path = os.path.join(os.getcwd(), "checkpoints")
@@ -131,6 +127,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if args.model == "all":
+        list_model = ["unet", "resunet", "segnet", "deeplabv3plus"]
+        for model_name in list_model:
+            train(args, model_name)
+    else:
+        train(args, args.model)
     
     

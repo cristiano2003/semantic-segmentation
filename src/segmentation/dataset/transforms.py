@@ -22,12 +22,9 @@ class Compose(object):
 
     def __call__(self, image, target):
         for t in self.transforms:
-            if isinstance(t, FilterAndRemapCocoCategories):
-                image, target = t(image, target)
-                continue
-            transform = t(image=image, mask=target)
+            image, target = t(image, target)       
             
-        return transform['image'], transform['mask']
+        return image, target
 
 
 class Resize(object):

@@ -1,5 +1,5 @@
-from src.neopolyp.model.model import NeoPolypModel
-from src.neopolyp.dataset.coco_utils import *
+from src.segmentation.model.model import NeoPolypModel
+from src.segmentation.dataset.coco_utils import *
 # from src.neopolyp.dataset.transforms import *
 from torchvision.transforms import Resize, InterpolationMode, ToPILImage
 import albumentations as A
