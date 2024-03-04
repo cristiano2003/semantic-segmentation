@@ -66,8 +66,8 @@ def train(args, model = 'resunet'):
     else:
         logger = None
 
-    train_dataset = build(mode="train", args=args)
-    val_dataset = build(mode="val", args=args)
+    train_dataset = build(args=args,mode="train")
+    val_dataset = build(args=args, mode="val")
     sampler_train = torch.utils.data.RandomSampler(train_dataset)
     sampler_val = torch.utils.data.SequentialSampler(val_dataset)
     

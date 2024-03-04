@@ -1,5 +1,5 @@
 python -m segmentation.train \
-        --model all \
+        --model resunet \
         --batch_size 16 \
         --max_epochs 25 \
         --num_workers 4 \

@@ -45,7 +45,7 @@ def predict(img):
     pred = model(img.float()).squeeze(0)
     argmax = torch.argmax(pred, 0)
     one_hot = torch.permute(mask2rgb(argmax).float(), (2, 0, 1))
-    mask2img =Resize(224, interpolation=InterpolationMode.NEAREST)(ToPILImage()(one_hot))
+    mask2img =Resize((256,256), interpolation=InterpolationMode.NEAREST)(ToPILImage()(one_hot))
     return mask2img
 
 def demo():
@@ -59,15 +59,15 @@ def demo():
 
         with gr.Row():
             global img_input
-            img_input = gr.Image(np.array(torch.permute(img, (1, 2, 0)), dtype=np.uint8))
-            img_output = gr.Image()
+            img_input = gr.Image(np.array(torch.permute(img, (1, 2, 0)), dtype=np.uint8), scale=1, height=256, width=256)
+            img_output = gr.Image(scale=1,height=256, width=156)
             choice.change(change_input, inputs=[img_input, choice], outputs=[img_input])
         with gr.Row():
             random_btn = gr.Button("Random")
             pred_btn = gr.Button("Predict")
 
-            pred_btn.click(predict, [img_input], outputs=[img_output], preprocess=True, postprocess=True)
-            random_btn.click(random_input, [img_input], outputs=[img_input], preprocess=True, postprocess=True)
+            pred_btn.click(predict, [img_input], outputs=[img_output])
+            random_btn.click(random_input, [img_input], outputs=[img_input])
 
     demo.launch()
     

@@ -107,7 +107,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 2, 3, 4]
+    CAT_LIST = [0, 3, 4, 6]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
@@ -135,12 +135,12 @@ def infer_build( mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 3]
+    CAT_LIST = [0, 3, 4]
 
     transforms = Compose([
        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
         ConvertCocoPolysToMask(),
-        build_transform(mode="train")
+        build_transform(mode="te")
     ])
 
     img_folder, ann_file = PATHS[mode]
