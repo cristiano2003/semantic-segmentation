@@ -1,7 +1,7 @@
 python -m segmentation.train \
-        --model unet \
+        --model deeplabv3plus \
         --batch_size 16 \
-        --max_epochs 25 \
+        --max_epochs 50 \
         --num_workers 4 \
         --lr 0.0001 \
         --data_path /kaggle/input/coco-2017-dataset/coco2017 \
