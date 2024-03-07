@@ -29,7 +29,7 @@ parser.add_argument(
     '--max_epochs', '-me', type=int, default=200,
                     help='max epoch')
 parser.add_argument(
-    '--batch_size', '-bs', type=int, default=25,
+    '--batch_size', '-bs', type=int, default=32,
                     help='batch size')
 parser.add_argument(
     '--lr', '-l', type=float, default=1e-4,
