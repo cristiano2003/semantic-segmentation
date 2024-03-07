@@ -111,7 +111,7 @@ def train(args, model = 'resunet'):
         default_root_dir=root_path,
         logger=logger,
         callbacks=[
-            ckpt_callback, lr_callback, early_stop_callback
+            ckpt_callback, lr_callback# , early_stop_callback
         ],
         gradient_clip_val=1.0,
         max_epochs=args.max_epochs,
