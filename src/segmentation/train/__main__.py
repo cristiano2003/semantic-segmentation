@@ -1,7 +1,6 @@
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.loggers import WandbLogger
-from torch.utils.data import DataLoader, random_split
 from torchvision.transforms import Resize
 from ..model.model import NeoPolypModel
 from ..dataset.coco_utils import *

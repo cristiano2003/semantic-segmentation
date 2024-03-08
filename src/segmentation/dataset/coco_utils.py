@@ -107,7 +107,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 3, 4, 6]
+    CAT_LIST = [0, 3, 4, 6, 8]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
@@ -128,30 +128,30 @@ def build(args, mode='train'):
 
 
 
-def infer_build( mode='train'):
-    root = "data"
-    PATHS = {
-        "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
-        "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
-    }
+# def infer_build( mode='train'):
+#     root = "data"
+#     PATHS = {
+#         "train": ("train2017", os.path.join("annotations", "instances_train2017.json")),
+#         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
+#     }
      
-    CAT_LIST = [0, 3, 4]
+#     CAT_LIST = [0, 3, 4]
 
-    transforms = Compose([
-       FilterAndRemapCocoCategories(CAT_LIST, remap=True),
-        ConvertCocoPolysToMask(),
-        build_transform(mode="te")
-    ])
+#     transforms = Compose([
+#        FilterAndRemapCocoCategories(CAT_LIST, remap=True),
+#         ConvertCocoPolysToMask(),
+#         build_transform(mode="te")
+#     ])
 
-    img_folder, ann_file = PATHS[mode]
-    img_folder = os.path.join(root, img_folder)
-    ann_file = os.path.join(root, ann_file)
+#     img_folder, ann_file = PATHS[mode]
+#     img_folder = os.path.join(root, img_folder)
+#     ann_file = os.path.join(root, ann_file)
 
-    dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
+#     dataset = torchvision.datasets.CocoDetection(img_folder, ann_file, transforms=transforms)
 
-    # if mode == "train":
-    dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
+#     # if mode == "train":
+#     dataset = _coco_remove_images_without_annotations(dataset, CAT_LIST)
 
-    return dataset
+#     return dataset
 
 

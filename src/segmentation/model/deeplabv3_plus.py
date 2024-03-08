@@ -13,7 +13,7 @@ from itertools import chain
 '''
 
 class ResNet(nn.Module):
-    def __init__(self, in_channels=3, output_stride=16, backbone='resnet101', pretrained=True):
+    def __init__(self, in_channels=3, output_stride=16, backbone='resnet50', pretrained=True):
         super(ResNet, self).__init__()
         model = getattr(models, backbone)(pretrained)
         if not pretrained or in_channels != 3:
@@ -334,7 +334,7 @@ class Decoder(nn.Module):
 '''
 
 class DeepLab(nn.Module):
-    def __init__(self, num_classes, in_channels=3, backbone='resnet', pretrained=False, 
+    def __init__(self, num_classes, in_channels=3, backbone='resnet', pretrained=True, 
                 output_stride=16, freeze_bn=False, **_):
                 
         super(DeepLab, self).__init__()
