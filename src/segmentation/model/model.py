@@ -17,7 +17,7 @@ class NeoPolypModel(pl.LightningModule):
         if name == "segnet":
             self.model = SegResNet(num_classes=num_classes)
         else:
-            self.model = UNet(in_channels=3, num_classes= num_classes, attention=True, recurrent=False)
+            self.model = UNet(in_channels=3, num_classes= num_classes, attention=False, recurrent=False)
         self.lr = lr
         self.dice_loss = DiceLoss()
         self.entropy_loss = nn.CrossEntropyLoss(ignore_index=255)
