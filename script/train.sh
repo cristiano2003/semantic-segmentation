@@ -1,5 +1,5 @@
 python -m segmentation.train \
-        --model segnet \
+        --model deeplabv3plus \
         --batch_size 16 \
         --max_epochs 50 \
         --num_workers 4 \

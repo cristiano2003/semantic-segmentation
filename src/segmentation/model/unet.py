@@ -166,5 +166,5 @@ class UNet(nn.Module):
 
 
 if __name__ == "__main__":
-    model = UNet(in_channels=3, attention=True)
+    model = UNet(in_channels=3, attention=False, recurrent=False)
     print(summary(model, input_size=(3, 256, 256), device="cpu"))
