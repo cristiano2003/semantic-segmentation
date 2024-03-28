@@ -74,7 +74,7 @@ def train(args, model = 'resunet'):
         sampler_train, args.batch_size, drop_last=False)
     
     train_loader = DataLoader(train_dataset, batch_sampler=batch_sampler_train,
-                                   collate_fn=collate_fn, num_workers=args.num_workers, shuffle=True)
+                                   collate_fn=collate_fn, num_workers=args.num_workers)
     val_loader = DataLoader(val_dataset, args.batch_size, sampler=sampler_val,
                                   collate_fn=collate_fn, num_workers=args.num_workers)
 
