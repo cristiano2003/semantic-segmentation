@@ -67,8 +67,8 @@ def train(args, model = 'resunet'):
 
     train_dataset = build(args=args,mode="train")
     val_dataset = build(args=args, mode="val")
-    sampler_train = DistributedSampler(train_dataset)
-    sampler_val =  DistributedSampler(val_dataset)
+    sampler_train = torch.utils.data.RandomSampler(train_dataset)
+    sampler_val = torch.utils.data.SequentialSampler(val_dataset)
     
     batch_sampler_train = torch.utils.data.BatchSampler(
         sampler_train, args.batch_size, drop_last=True)
