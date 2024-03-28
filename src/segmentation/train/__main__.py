@@ -67,16 +67,16 @@ def train(args, model = 'resunet'):
 
     train_dataset = build(args=args,mode="train")
     val_dataset = build(args=args, mode="val")
-    sampler_train = torch.utils.data.RandomSampler(train_dataset)
-    sampler_val = torch.utils.data.SequentialSampler(val_dataset)
+    sampler_train = DistributedSampler(train_dataset)
+    sampler_val =  DistributedSampler(val_dataset)
     
     batch_sampler_train = torch.utils.data.BatchSampler(
         sampler_train, args.batch_size, drop_last=True)
     
     train_loader = DataLoader(train_dataset, batch_sampler=batch_sampler_train,
-                                   collate_fn=collate_fn, num_workers=args.num_workers)
+                                   collate_fn=collate_fn, num_workers=args.num_workers, shuffle=True)
     val_loader = DataLoader(val_dataset, args.batch_size, sampler=sampler_val,
-                                 drop_last=False, collate_fn=collate_fn, num_workers=args.num_workers)
+                                  collate_fn=collate_fn, num_workers=args.num_workers)
 
     # MODEL
     model = NeoPolypModel(lr=args.lr, name=model)
@@ -95,7 +95,7 @@ def train(args, model = 'resunet'):
         filename=args.model,
         save_top_k=1,
         mode="min"
-    )  # save top 2 epochs with the highest val_dice_score
+    )  # save top 1 epochs with the highest val_dice_score
     lr_callback = LearningRateMonitor("step")
 
     early_stop_callback = EarlyStopping(

@@ -107,7 +107,7 @@ def build(args, mode='train'):
         "val": ("val2017", os.path.join("annotations", "instances_val2017.json")),
     }
      
-    CAT_LIST = [0, 3, 4, 6, 8]
+    CAT_LIST = [i for i in range(1, 12)] + [13, 14, 15]
 
     transforms = Compose([
         FilterAndRemapCocoCategories(CAT_LIST, remap=True),
